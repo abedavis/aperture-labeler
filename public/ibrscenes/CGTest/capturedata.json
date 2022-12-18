@@ -1,0 +1,292 @@
+{
+    "_ainfo": {
+        "AObjectTypeName": "COLMAPScene",
+        "cameras": [
+            {
+                "height": 2613,
+                "id": "1",
+                "model": "SIMPLE_RADIAL",
+                "params": [
+                    1302.7,
+                    784.0,
+                    1306.5,
+                    0.00390972
+                ],
+                "py/object": "read_colmap.Camera",
+                "width": 1568
+            }
+        ],
+        "image_poses": [
+            {
+                "cameraID": "1",
+                "ext": ".png",
+                "filename": "A3DSceneController (1).png",
+                "hour": "1",
+                "image_id": "1",
+                "isotime": "1",
+                "minute": "1",
+                "month": "1",
+                "name": "A3DSceneController (1)",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.944507,
+                    0.011364,
+                    0.30934,
+                    0.109938
+                ],
+                "second": "1",
+                "timestamp": "1",
+                "translation": [
+                    -4.50551,
+                    -0.711122,
+                    2.02616
+                ],
+                "weekday": "1",
+                "year": "1"
+            },
+            {
+                "cameraID": "1",
+                "ext": ".png",
+                "filename": "A3DSceneController (2).png",
+                "hour": "2",
+                "image_id": "2",
+                "isotime": "2",
+                "minute": "2",
+                "month": "2",
+                "name": "A3DSceneController (2)",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.916439,
+                    0.0120257,
+                    0.378485,
+                    0.129402
+                ],
+                "second": "2",
+                "timestamp": "2",
+                "translation": [
+                    -5.41656,
+                    -0.935656,
+                    2.76642
+                ],
+                "weekday": "2",
+                "year": "2"
+            },
+            {
+                "cameraID": "1",
+                "ext": ".png",
+                "filename": "A3DSceneController (6).png",
+                "hour": "3",
+                "image_id": "3",
+                "isotime": "3",
+                "minute": "3",
+                "month": "3",
+                "name": "A3DSceneController (6)",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.984032,
+                    0.00778502,
+                    0.164747,
+                    0.0669196
+                ],
+                "second": "3",
+                "timestamp": "3",
+                "translation": [
+                    -2.37231,
+                    -0.403737,
+                    1.00626
+                ],
+                "weekday": "3",
+                "year": "3"
+            },
+            {
+                "cameraID": "1",
+                "ext": ".png",
+                "filename": "A3DSceneController (3).png",
+                "hour": "4",
+                "image_id": "4",
+                "isotime": "4",
+                "minute": "4",
+                "month": "4",
+                "name": "A3DSceneController (3)",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.99061,
+                    -0.00039521,
+                    -0.134985,
+                    -0.0216914
+                ],
+                "second": "4",
+                "timestamp": "4",
+                "translation": [
+                    2.38029,
+                    -0.428002,
+                    0.998423
+                ],
+                "weekday": "4",
+                "year": "4"
+            },
+            {
+                "cameraID": "1",
+                "ext": ".png",
+                "filename": "A3DSceneController (7).png",
+                "hour": "5",
+                "image_id": "5",
+                "isotime": "5",
+                "minute": "5",
+                "month": "5",
+                "name": "A3DSceneController (7)",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.957591,
+                    -0.0031007,
+                    -0.280535,
+                    -0.0656473
+                ],
+                "second": "5",
+                "timestamp": "5",
+                "translation": [
+                    4.508,
+                    -0.734414,
+                    2.02904
+                ],
+                "weekday": "5",
+                "year": "5"
+            },
+            {
+                "cameraID": "1",
+                "ext": ".png",
+                "filename": "A3DSceneController (4).png",
+                "hour": "6",
+                "image_id": "6",
+                "isotime": "6",
+                "minute": "6",
+                "month": "6",
+                "name": "A3DSceneController (4)",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.977057,
+                    -0.00122304,
+                    -0.208303,
+                    -0.0443576
+                ],
+                "second": "6",
+                "timestamp": "6",
+                "translation": [
+                    3.4873,
+                    -0.553007,
+                    1.4359
+                ],
+                "weekday": "6",
+                "year": "6"
+            },
+            {
+                "cameraID": "1",
+                "ext": ".png",
+                "filename": "A3DSceneController (9).png",
+                "hour": "7",
+                "image_id": "7",
+                "isotime": "7",
+                "minute": "7",
+                "month": "7",
+                "name": "A3DSceneController (9)",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.994931,
+                    0.00565624,
+                    0.0898615,
+                    0.044778
+                ],
+                "second": "7",
+                "timestamp": "7",
+                "translation": [
+                    -1.1939,
+                    -0.331045,
+                    0.739944
+                ],
+                "weekday": "7",
+                "year": "7"
+            },
+            {
+                "cameraID": "1",
+                "ext": ".png",
+                "filename": "A3DSceneController (8).png",
+                "hour": "8",
+                "image_id": "8",
+                "isotime": "8",
+                "minute": "8",
+                "month": "8",
+                "name": "A3DSceneController (8)",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.998178,
+                    0.00141651,
+                    -0.0603275,
+                    0.000229246
+                ],
+                "second": "8",
+                "timestamp": "8",
+                "translation": [
+                    1.21145,
+                    -0.343253,
+                    0.733396
+                ],
+                "weekday": "8",
+                "year": "8"
+            },
+            {
+                "cameraID": "1",
+                "ext": ".png",
+                "filename": "A3DSceneController (5).png",
+                "hour": "9",
+                "image_id": "9",
+                "isotime": "9",
+                "minute": "9",
+                "month": "9",
+                "name": "A3DSceneController (5)",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.999635,
+                    0.00401841,
+                    0.0147895,
+                    0.0222669
+                ],
+                "second": "9",
+                "timestamp": "9",
+                "translation": [
+                    0.00961732,
+                    -0.300321,
+                    0.64528
+                ],
+                "weekday": "9",
+                "year": "9"
+            },
+            {
+                "cameraID": "1",
+                "ext": ".png",
+                "filename": "A3DSceneController.png",
+                "hour": "10",
+                "image_id": "10",
+                "isotime": "10",
+                "minute": "10",
+                "month": "10",
+                "name": "A3DSceneController",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.967129,
+                    0.00910035,
+                    0.238034,
+                    0.0889852
+                ],
+                "second": "10",
+                "timestamp": "10",
+                "translation": [
+                    -3.48374,
+                    -0.538855,
+                    1.44189
+                ],
+                "weekday": "10",
+                "year": "10"
+            }
+        ]
+    }
+}
