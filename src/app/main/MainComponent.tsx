@@ -11,9 +11,9 @@ import {AThreeJSContextComponent, ControlPanel} from "../../anigraph";
 import React, {useState} from "react";
 
 
-import {MainSceneModel} from "./Scene/MainSceneModel";
+import {MainSceneRootModel} from "./Scene/MainSceneRootModel";
 import {MainSceneController} from "./Scene/MainSceneController";
-const SceneModel = new MainSceneModel();
+const SceneModel = new MainSceneRootModel();
 SceneModel.confirmInitialized();
 const SceneController = new MainSceneController(SceneModel);
 

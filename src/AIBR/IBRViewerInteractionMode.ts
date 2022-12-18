@@ -4,23 +4,29 @@ import {
     AInteractionEvent,
     AKeyboardInteraction,
     ASceneModel,
-    ASerializable, NodeTransform3D, Quaternion, Vec2, Vec3
+    ASerializable, NodeTransform3D, Quaternion, V2, Vec2, Vec3
 } from "../anigraph";
-import {ASceneModelWithIBR} from "./ASceneModelWithIBR";
+import {ASceneModelWithIBRData} from "./ASceneModelWithIBRData";
 import type {ASceneControllerWithIBR} from "./ASceneControllerWithIBR";
 import type {HasInteractionModeCallbacks} from "../anigraph";
 import {AWheelInteraction} from "../anigraph/interaction/AWheelInteraction";
+import {IBRDataModel} from "./IBRDataModel";
 
 @ASerializable("ExamplePlayerInteractionMode")
 export class IBRViewerInteractionMode extends ASceneInteractionMode{
-    cameraMovementSpeed:number=0.02;
+    cameraMovementSpeed:number=0.1;
     cameraOrbitSpeed:number=3;
+    focusAdjustmentSpeed:number=0.01;
 
     get owner(): ASceneControllerWithIBR {
         return this._owner as ASceneControllerWithIBR;
     }
 
-    get model(): ASceneModelWithIBR {
+    get ibr():IBRDataModel{
+        return this.owner.model.ibr;
+    }
+
+    get model(): ASceneModelWithIBRData {
         return this.owner.model;
     }
     get camera(){
@@ -61,8 +67,18 @@ export class IBRViewerInteractionMode extends ASceneInteractionMode{
 
     onWheelMove(event: AInteractionEvent, interaction: AWheelInteraction) {
         let zoom = (event.DOMEvent as WheelEvent).deltaY;
-        console.log(`Wheel moved! deltaY: ${zoom}`);
+        if(event.shiftKey){
+            console.log(zoom);
+        }else{
+            let focusDepth = this.ibr.focusDistance+zoom*this.focusAdjustmentSpeed;
+            this.ibr.setFocusDistance(focusDepth);
+        }
     }
+
+
+
+
+
 
     onMouseMove(event:AInteractionEvent, interaction: ADOMPointerMoveInteraction){
     }
@@ -86,6 +102,31 @@ export class IBRViewerInteractionMode extends ASceneInteractionMode{
         if(interaction.keysDownState['f']){
             this.camera.pose.position = this.camera.pose.position.plus(this.camera.up.times(-this.cameraMovementSpeed));
         }
+
+        if (interaction.keysDownState["P"]) {
+            console.log(this.camera.pose);
+        }
+        if (interaction.keysDownState["R"]) {
+            this.camera.pose = this.ibr.closestView.pose.clone();
+        }
+        // if (interaction.keysDownState["P"]) {
+        //     appState.framesToRecord = appState.totalFramesToRecord;
+        // }
+        // if (interaction.keysDownState["M"]) {
+        //     appState.printMatrices();
+        // }
+        if (interaction.keysDownState["H"]) {
+            this.ibr.showGUI = !this.ibr.showGUI;
+        }
+        if (interaction.keysDownState["F"]) {
+            this.ibr.showFocusSphere = !this.ibr.showFocusSphere;
+        }
+        if (interaction.keysDownState["X"]) {
+            this.camera.pose.rotation = Quaternion.RotationZ(Math.PI * 0.5).times(
+                this.camera.pose.rotation
+            );
+        }
+
     }
 
     onKeyUp(event:AInteractionEvent, interaction:AKeyboardInteraction){
@@ -115,15 +156,24 @@ export class IBRViewerInteractionMode extends ASceneInteractionMode{
         }
         let mouseMovement = event.ndcCursor.minus(interaction.getInteractionState('lastCursor'));
         interaction.setInteractionState('lastCursor', event.ndcCursor);
-        let rotationX = -mouseMovement.x*this.cameraOrbitSpeed;
-        let rotationY = mouseMovement.y*this.cameraOrbitSpeed;
-        let qX = Quaternion.FromAxisAngle(this.camera.up, rotationX);
-        let qY = Quaternion.FromAxisAngle(this.camera.right, rotationY);
-        let newPose = this.camera.pose.clone();
-        newPose = new NodeTransform3D(qX.appliedTo(newPose.position), newPose.rotation.times(qX));
-        newPose = new NodeTransform3D(qY.appliedTo(newPose.position), newPose.rotation.times(qY));
-        this.cameraModel.setPose(newPose);
-        this.cameraModel.signalTransformUpdate();
+
+        if (event.shiftKey) {
+            // console.log(event.normalizedXY);
+            this.ibr.setFocusPointInImagePlane(
+                V2(event.ndcCursor.x, event.ndcCursor.y)
+            );
+        }else {
+
+            let rotationX = -mouseMovement.x * this.cameraOrbitSpeed;
+            let rotationY = mouseMovement.y * this.cameraOrbitSpeed;
+            let qX = Quaternion.FromAxisAngle(this.camera.up, rotationX);
+            let qY = Quaternion.FromAxisAngle(this.camera.right, rotationY);
+            let newPose = this.camera.pose.clone();
+            newPose = new NodeTransform3D(qX.appliedTo(newPose.position.minus(this.ibr.focusTargetPoint)).plus(this.ibr.focusTargetPoint), newPose.rotation.times(qX));
+            newPose = new NodeTransform3D(qY.appliedTo(newPose.position.minus(this.ibr.focusTargetPoint)).plus(this.ibr.focusTargetPoint), newPose.rotation.times(qY));
+            this.cameraModel.setPose(newPose);
+            this.cameraModel.signalTransformUpdate();
+        }
     }
     onDragEnd(event: AInteractionEvent, interaction: ADragInteraction): void {
         let cursorWorldCoordinates:Vec2|null = event.ndcCursor;

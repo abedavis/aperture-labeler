@@ -9,13 +9,14 @@ import {
     Vector,
     VertexArray3D
 } from "../anigraph";
-import {IBRScene} from "./IBRScene";
+import {IBRSceneData} from "./IBRSceneData";
 import {IBRCapturedImage} from "./IBRCapturedImage";
 import {folder} from "leva";
 import * as THREE from "three";
 import {ViewReprojectionShaderMaterial} from "./shadermodels";
 import {MAX_TEX_PER_CALL} from "../anigraph/rendering/material/shadermodels";
 import {AWheelInteraction} from "../anigraph/interaction/AWheelInteraction";
+import * as IBRShaders from "./IBRShaders";
 
 enum CONSTANTS {
     FOCUS_DISTANCE_CHANGE_FACTOR = 0.01,
@@ -67,7 +68,7 @@ function gaussian(x: number, sigma: number, m: number = 0) {
  * The model's verts and material correspond to the focal plane
  */
 @ASerializable("IBRSceneModel")
-export class IBRSceneModel extends ANodeModel3D {
+export class IBRDataModel extends ANodeModel3D {
 
 
     static TimeFilters = IBR_TEMPORAL_FILTERS;
@@ -89,7 +90,7 @@ export class IBRSceneModel extends ANodeModel3D {
     // are selected. So nTimeNeighbors > nSpaceNeighbors
 
     @AObjectState focusTargetPoint!: Vec3;
-    ibr!: IBRScene;
+    sceneData!: IBRSceneData;
     @AObjectState _virtualCamera!: ACamera;
     _neighborhoodViews: IBRCapturedImage[] = [];
     // _sortedViewsSpace:IBRCapturedImage[]=[];
@@ -112,6 +113,14 @@ export class IBRSceneModel extends ANodeModel3D {
     @AObjectState progressMode: IBR_PROGRESS_MODES;
 
 
+
+    static async CreateForScene(path:string){
+        let ibrScene = await IBRSceneData.FromPathCOLMAP(path);
+        let ibrSceneModel = new this();
+        await ibrScene.loadTextures();
+        ibrSceneModel.setIBRScene(ibrScene);
+        return ibrSceneModel;
+    }
 
 
     static _GetTemporalFilterModes() {
@@ -147,14 +156,14 @@ export class IBRSceneModel extends ANodeModel3D {
      */
     getModelGUIControlSpec(): { [p: string]: any } {
         const self = this;
-        let nCapturedImages = this.ibr?.nCapturedImages;
+        let nCapturedImages = this.sceneData?.nCapturedImages;
         return {
             // ...super.getControlPanelStandardSpec(),
             SpaceTimeFilter: folder(
                 {
                     TimeFilterMode: {
                         value: self.timeFilter,
-                        options: IBRSceneModel._GetTemporalFilterModes(),
+                        options: IBRDataModel._GetTemporalFilterModes(),
                         onChange: (v: any) => {
                             self.timeFilter = v;
                             self.updateReconstruction();
@@ -162,7 +171,7 @@ export class IBRSceneModel extends ANodeModel3D {
                     },
                     FilterOrder: {
                         value: self.filterOrder,
-                        options: IBRSceneModel._GetFilterOrders(),
+                        options: IBRDataModel._GetFilterOrders(),
                         onChange: (v: any) => {
                             self.filterOrder = v;
                             self.updateReconstruction();
@@ -170,7 +179,7 @@ export class IBRSceneModel extends ANodeModel3D {
                     },
                     ProgressMode: {
                         value: self.progressMode,
-                        options: IBRSceneModel._GetProgressModes(),
+                        options: IBRDataModel._GetProgressModes(),
                         onChange: (v: any) => {
                             self.progressMode = v;
                             self.updateReconstruction();
@@ -280,8 +289,8 @@ export class IBRSceneModel extends ANodeModel3D {
         // }
         this.focusTargetPoint = V3(0, 0, 0);
         this.fixedFocalPlane = false;
-        this.timeFilter = IBRSceneModel.TimeFilters.Date;
-        this.spaceFilter = IBRSceneModel.SpaceFilters.Angle;
+        this.timeFilter = IBRDataModel.TimeFilters.Date;
+        this.spaceFilter = IBRDataModel.SpaceFilters.Angle;
         this.filterOrder = IBR_FILTER_ORDER.ForTime_ST;
         this.timeInterpolationMode = IBR_TIME_INTERPOLATION_MODES.Neighborhood;
         // this.spaceInterpolationMode = IBR_SPACE_INTERPOLATION_MODES.Value;
@@ -300,6 +309,9 @@ export class IBRSceneModel extends ANodeModel3D {
         this.filterSpace = true;
         this.filterActive = true;
 
+        this.setMaterial(IBRShaders.CreateMaterial(IBRShaders.ShaderNames.ViewReprojection));
+        this.material.threejs.side=THREE.DoubleSide;
+
         const self = this;
 
         this.subscribe(
@@ -317,7 +329,7 @@ export class IBRSceneModel extends ANodeModel3D {
 
         this.subscribe(
             this.addStateKeyListener("timeFilter", () => {
-                self.setTimeValues(self.ibr.capturedImages, self.timeFilter);
+                self.setTimeValues(self.sceneData.capturedImages, self.timeFilter);
                 self._targetTimeValue =
                     self._neighborhoodViews[0]._currentTemporalSortValue;
             }),
@@ -328,6 +340,7 @@ export class IBRSceneModel extends ANodeModel3D {
     get focusDistance() {
         return this.focusTargetPoint.minus(this.virtualCameraPose.position).L2();
     }
+
 
     addVirtualCameraListener(
         callback: (self: AObject) => void,
@@ -359,13 +372,13 @@ export class IBRSceneModel extends ANodeModel3D {
         return this._material as ViewReprojectionShaderMaterial;
     }
 
-    setIBRScene(ibr: IBRScene) {
-        this.ibr = ibr;
+    setIBRScene(ibr: IBRSceneData) {
+        this.sceneData = ibr;
         this.signalEvent(IBR_MODEL_EVENTS.IBR_SCENE_CHANGE);
     }
 
     setVirtualCamera(camera: ACamera) {
-        this.ibr.updateReconstructionScores(camera.pose, this.focusTargetPoint);
+        this.sceneData.updateReconstructionScores(camera.pose, this.focusTargetPoint);
         this._virtualCamera = camera;
     }
     get virtualCamera() {
@@ -378,20 +391,20 @@ export class IBRSceneModel extends ANodeModel3D {
 
     get closestView() {
         if (this.filterActive) {
-            let active = IBRCapturedImage.GetActive(this.ibr.capturedImages);
+            let active = IBRCapturedImage.GetActive(this.sceneData.capturedImages);
             if (active.length) {
                 return this.getSpaceSortedViews(active)[0];
             } else {
-                return this.getSpaceSortedViews(this.ibr.capturedImages)[0];
+                return this.getSpaceSortedViews(this.sceneData.capturedImages)[0];
             }
         } else {
-            return this.getSpaceSortedViews(this.ibr.capturedImages)[0];
+            return this.getSpaceSortedViews(this.sceneData.capturedImages)[0];
         }
     }
 
     shiftTargetTimeView(steps: number) {
         // let views = this._sortedViewsTime;
-        let views = this.getTimeSortedViews(this.ibr.capturedImages);
+        let views = this.getTimeSortedViews(this.sceneData.capturedImages);
         for (let vi = 0; vi < views.length; vi++) {
             if (views[vi]._currentTemporalSortValue >= this._targetTimeValue) {
                 let newind = Math.min(Math.max(vi + steps, 0), views.length - 1);
@@ -404,12 +417,12 @@ export class IBRSceneModel extends ANodeModel3D {
     }
 
     setProgressByTimeOrder(progress: number, ordered?: IBRCapturedImage[]) {
-        if (this.ibr === undefined) {
+        if (this.sceneData === undefined) {
             this._targetTimeValue = 0;
             return;
         }
         if (!ordered) {
-            ordered = this.ibr.capturedImages;
+            ordered = this.sceneData.capturedImages;
         }
         let pindex = progress * (ordered.length - 1);
         let find = Math.floor(pindex);
@@ -422,12 +435,12 @@ export class IBRSceneModel extends ANodeModel3D {
     }
 
     setProgressByTimeValue(progress: number, ordered?: IBRCapturedImage[]) {
-        if (this.ibr === undefined) {
+        if (this.sceneData === undefined) {
             this._targetTimeValue = 0;
             return;
         }
         if (!ordered) {
-            ordered = this.ibr.capturedImages;
+            ordered = this.sceneData.capturedImages;
         }
         let beginValue = ordered[0]._currentTemporalSortValue;
         let endValue = ordered[ordered.length - 1]._currentTemporalSortValue;
@@ -439,10 +452,10 @@ export class IBRSceneModel extends ANodeModel3D {
         this.setTimeValues(active);
         let timescored = IBRCapturedImage.GetSortedByTimeScore(active);
         switch (this.progressMode) {
-            case IBRSceneModel.ProgressModes.Order:
+            case IBRDataModel.ProgressModes.Order:
                 this.setProgressByTimeOrder(progress, timescored);
                 break;
-            case IBRSceneModel.ProgressModes.Value:
+            case IBRDataModel.ProgressModes.Value:
                 this.setProgressByTimeValue(progress, timescored);
                 break;
         }
@@ -452,9 +465,9 @@ export class IBRSceneModel extends ANodeModel3D {
     getActiveViews() {
         let activeViews: IBRCapturedImage[];
         if (this.filterActive) {
-            activeViews = IBRCapturedImage.GetActive(this.ibr.capturedImages);
+            activeViews = IBRCapturedImage.GetActive(this.sceneData.capturedImages);
         } else {
-            activeViews = this.ibr.capturedImages.slice();
+            activeViews = this.sceneData.capturedImages.slice();
         }
         return activeViews;
     }
@@ -542,15 +555,15 @@ export class IBRSceneModel extends ANodeModel3D {
     ) {
         let timeFilter = temporal_filter ?? this.timeFilter;
         switch (timeFilter) {
-            case IBRSceneModel.TimeFilters.Date:
+            case IBRDataModel.TimeFilters.Date:
                 // rviews = this._getSortedByDate(views);
                 this._setTimeValuesToDate(views);
                 break;
-            case IBRSceneModel.TimeFilters.TimeOfDay:
+            case IBRDataModel.TimeFilters.TimeOfDay:
                 // rviews = this._getSortedByTimeOfDay(views);
                 this._setTimeValuesToTimeOfDay(views);
                 break;
-            case IBRSceneModel.TimeFilters.SunAngle:
+            case IBRDataModel.TimeFilters.SunAngle:
                 // rviews = this._getSortedByTimeOfDay(views);
                 this._setTimeValuesToTimeOfDay(views);
                 break;
@@ -576,10 +589,10 @@ export class IBRSceneModel extends ANodeModel3D {
         let spaceFilter = spatial_filter ?? IBR_SPATIAL_FILTERS.Angle;
         let rviews: IBRCapturedImage[];
         switch (spaceFilter) {
-            case IBRSceneModel.SpaceFilters.Angle:
+            case IBRDataModel.SpaceFilters.Angle:
                 rviews = this._getSortedByAngle(views);
                 break;
-            case IBRSceneModel.SpaceFilters.Position:
+            case IBRDataModel.SpaceFilters.Position:
                 rviews = this._getSortedByPosition(views);
                 break;
             default:
@@ -595,8 +608,8 @@ export class IBRSceneModel extends ANodeModel3D {
     }
 
     updateReconstruction() {
-        this.ibr.resetContributionValues();
-        if (this.ibr === undefined) {
+        this.sceneData.resetContributionValues();
+        if (this.sceneData === undefined) {
             return;
         }
 
@@ -658,14 +671,14 @@ export class IBRSceneModel extends ANodeModel3D {
         let timeScores = new Vector();
         let spaceScores = new Vector();
         switch (this.timeInterpolationMode) {
-            case IBRSceneModel.TimeInterpolationModes.Value:
+            case IBRDataModel.TimeInterpolationModes.Value:
                 for (let vi = 0; vi < this._neighborhoodViews.length; vi++) {
                     timeScores.elements.push(
                         this._neighborhoodViews[vi]._currentTemporalSortValue
                     );
                 }
                 break;
-            case IBRSceneModel.TimeInterpolationModes.Neighborhood:
+            case IBRDataModel.TimeInterpolationModes.Neighborhood:
                 for (let vi = 0; vi < this._neighborhoodViews.length; vi++) {
                     timeScores.elements.push(gaussian(vi, this.timeAperture, 0));
                 }
@@ -675,12 +688,12 @@ export class IBRSceneModel extends ANodeModel3D {
         }
 
         switch (this.spaceInterpolationMode) {
-            case IBRSceneModel.SpaceInterpolationModes.Neighborhood:
+            case IBRDataModel.SpaceInterpolationModes.Neighborhood:
                 for (let vi = 0; vi < this._neighborhoodViews.length; vi++) {
                     spaceScores.elements.push(gaussian(vi, this.spaceAperture, 0));
                 }
                 break;
-            case IBRSceneModel.SpaceInterpolationModes.Value:
+            case IBRDataModel.SpaceInterpolationModes.Value:
                 for (let vi = 0; vi < this._neighborhoodViews.length; vi++) {
                     spaceScores.elements.push(
                         Math.pow(
@@ -757,7 +770,7 @@ export class IBRSceneModel extends ANodeModel3D {
         let screenTarget = focalPoint.times(2.0).minus(V2(1.0, 1.0));
         console.log(`[${screenTarget.x}, ${screenTarget.y}]`);
         console.log(`FP [${focalPoint.x}, ${focalPoint.y}]`);
-        let fp4 = new Vec4(screenTarget.x, screenTarget.y, 1.0, 1.0);
+        let fp4 = new Vec4(focalPoint.x, focalPoint.y, 1.0, 1.0);
         let fw = this.virtualCameraPose
             .getMatrix()
             .times(this.virtualCamera.projection.getInverse().times(fp4)).Point3D;

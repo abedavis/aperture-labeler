@@ -124,8 +124,8 @@ export abstract class ASceneController extends AController implements ARenderDel
     }
 
 
-    getCameraView(cameraModel:ACameraModel){
-        return this.getViewListForModel(cameraModel)[0];
+    getCameraView(cameraModel:ACameraModel): ACameraView{
+        return this.getViewListForModel(cameraModel)[0] as unknown as ACameraView;
     }
 
 

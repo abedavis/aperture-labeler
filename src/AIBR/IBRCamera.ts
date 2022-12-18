@@ -145,12 +145,45 @@ export class IBRCamera{
         let ogly0=0;
         let drange = zfar-znear;
 
+        // let proj = Mat4.PerspectiveFromFOV(60, 1/1.7);
+
+        // negative m11?
+        // let proj = new Mat4(
+        //     2*fx/width, -2*K.m01/width, (width-2*x0+2*oglx0)/width, 0,
+        //     0, -2*fy/height, (height-2*y0+2*ogly0)/height, 0,
+        //     0, 0, (-zfar-znear)/(drange), -2*zfar*znear/(drange),
+        //     0,0,-1,0
+        // )
+
+        // let proj = new Mat4(
+        //     2*fx/width, -2*K.m01/width, (width-2*x0+2*oglx0)/width, 0,
+        //     0, 2*fy/height, (height-2*y0+2*ogly0)/height, 0,
+        //     0, 0, (-zfar-znear)/(drange), -2*zfar*znear/(drange),
+        //     0,0,-1,0
+        // )
+
+        // let proj = new Mat4(
+        //     2*fx/width, -2*K.m01/width, (width-2*x0+2*oglx0)/width,     0,
+        //     0,          2*fy/height,    (height-2*y0+2*ogly0)/height,   0,
+        //     0,          0,              (-zfar-znear)/(drange),         -2*zfar*znear/(drange),
+        //     0,          0,              -1,                             0
+        // )
+
+
         let proj = new Mat4(
-            2*fx/width, -2*K.m01/width, (width-2*x0+2*oglx0)/width, 0,
-            0, 2*fy/height, (height-2*y0+2*ogly0)/height, 0,
-            0, 0, (-zfar-znear)/(drange), -2*zfar*znear/(drange),
-            0,0,-1,0
+            2*fx/width, -2*K.m01/width, (width-2*x0+2*oglx0)/width,     0,
+            0,          2*fy/height,    (height-2*y0+2*ogly0)/height,   0,
+            0,          0,              (-zfar-znear)/(drange),         -2*zfar*znear/(drange),
+            0,          0,              -1,                             0
         )
+
+        // Worked with old version
+        // let proj = new Mat4(
+        //     2*fx/width, -2*K.m01/width, (width-2*x0+2*oglx0)/width, 0,
+        //     0, 2*fy/height, (height-2*y0+2*ogly0)/height, 0,
+        //     0, 0, (-zfar-znear)/(drange), -2*zfar*znear/(drange),
+        //     0,0,-1,0
+        // )
 
         return proj
     }

@@ -1,4 +1,4 @@
-import {V2, Vec2, V3, Vec3, V4, Vec4, Mat4, V4A} from "../index";
+import {V2, Vec2, V3, Vec3, V4, Vec4, Mat4, V4A} from "../";
 import {
   VertexAttributeArray,
   VertexAttributeArray2D,
@@ -6,11 +6,11 @@ import {
   VertexAttributeArray4D,
   VertexAttributeArrayFromThreeJS, VertexAttributeColorArray,
 } from "./VertexAttributeArray";
-import { ASerializable} from "../index";
+import { ASerializable} from "../";
 import { VertexArray } from "./VertexArray";
 import { VertexIndexArray } from "./VertexIndexArray";
 import { BoundingBox3D } from "./BoundingBox3D";
-import { Color} from "../index";
+import { Color} from "../";
 
 // import { ATexture } from "../arender/ATexture";
 

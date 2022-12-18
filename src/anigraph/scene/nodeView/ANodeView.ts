@@ -62,7 +62,7 @@ export abstract class _ANodeView extends AView{
             if(self.threejs.parent !== undefined){
                 self.threejs.removeFromParent();
             }
-            if(newParent !== undefined) {
+            if(newParent !== undefined && newParent!==this.model) {
                 self.controller.getViewListForModel(newParent)[0].threejs.add(self.threejs);
             }
         }))

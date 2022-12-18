@@ -1,2 +1,2 @@
-export * from "./MainSceneModel";
+export * from "./MainSceneRootModel";
 export * from "./MainSceneController";

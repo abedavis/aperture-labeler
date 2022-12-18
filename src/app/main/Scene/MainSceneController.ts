@@ -10,16 +10,18 @@ import {
 } from "../../../anigraph";
 import {ATriangleMeshModel, ATriangleMeshView} from "../../../anigraph/scene/nodes";
 import {ADebugInteractionMode} from "../../../anigraph/scene/interactionmodes/ADebugInteractionMode";
-import {MainSceneModel} from "./MainSceneModel";
+import {MainSceneRootModel} from "./MainSceneRootModel";
 import {AppConfigs} from "../../AppConfigs";
 import * as THREE from "three";
 import {ASceneControllerWithIBR} from "../../../AIBR/ASceneControllerWithIBR";
+import {IBRDataModel, IBRSceneView} from "../../../AIBR";
+import {IBRViewerInteractionMode} from "../../../AIBR/IBRViewerInteractionMode";
 
 
 
 export class MainSceneController extends ASceneController implements ASceneControllerWithIBR{
-    get model():MainSceneModel{
-        return this._model as MainSceneModel;
+    get model():MainSceneRootModel{
+        return this._model as MainSceneRootModel;
     }
 
     /**
@@ -27,6 +29,7 @@ export class MainSceneController extends ASceneController implements ASceneContr
      */
     initModelViewSpecs(): void {
         this.addModelViewSpec(ATriangleMeshModel, ATriangleMeshView);
+        this.addModelViewSpec(IBRDataModel, IBRSceneView);
     }
 
     async initScene(): Promise<void> {
@@ -36,7 +39,11 @@ export class MainSceneController extends ASceneController implements ASceneContr
     initInteractions() {
         let debugInteractionMode = new ADebugInteractionMode(this);
         this.defineInteractionMode("Debug", debugInteractionMode);
-        this.setCurrentInteractionMode("Debug")
+
+        let ibrInteractionMode = new IBRViewerInteractionMode(this);
+        this.defineInteractionMode("IBR", ibrInteractionMode);
+
+        this.setCurrentInteractionMode("IBR")
     }
 
     onAnimationFrameCallback(context:AGLContext) {

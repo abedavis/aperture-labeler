@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {V3, Mat4, TransformationInterface, NodeTransform3D,} from "../index";
+import {V3, Mat4, TransformationInterface, NodeTransform3D,} from "../";
 import {HasBounds} from "./HasBounds";
 import {VertexArray3D} from "./VertexArray3D";
 import {BoundingBox3D} from "./BoundingBox3D";

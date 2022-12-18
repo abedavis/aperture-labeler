@@ -8,7 +8,7 @@ enum IBRSceneJSONParams {
     Cameras = "cameras",
 }
 
-export class IBRScene extends AObject {
+export class IBRSceneData extends AObject {
     static JSONParams = IBRSceneJSONParams;
     capturedImages: IBRCapturedImage[] = [];
 
@@ -39,7 +39,7 @@ export class IBRScene extends AObject {
     }
 
     static async FromCOLMAPDict(d: { [name: string]: any }, cameraIDs?:number[]) {
-        let scene = new IBRScene();
+        let scene = new IBRSceneData();
         let poses = d[IBRSceneJSONParams.Images];
         let cameras = d[IBRSceneJSONParams.Cameras];
         for (let cam of cameras) {
@@ -95,7 +95,7 @@ export class IBRScene extends AObject {
         // let jsondata = await loadJSONFromURL("./scenes/SpaceWallflower/capture0/capturedata.json");
         let jsondata = await loadJSONFromURL(path + "capturedata.json");
 
-        let ibr = await IBRScene.FromCOLMAPDict(jsondata["_ainfo"], cameraIDs);
+        let ibr = await IBRSceneData.FromCOLMAPDict(jsondata["_ainfo"], cameraIDs);
         ibr.path = path;
         ibr.texturesLoaded = ibr.loadTextures();
         return ibr;
@@ -106,7 +106,7 @@ export class IBRScene extends AObject {
         let jsondata = await loadJSONFromURL(path + "scene_data.json");
 
         let viewpoints = jsondata["viewpoints"];
-        let scene = new IBRScene();
+        let scene = new IBRSceneData();
         for (let vp of viewpoints) {
             let view_id = vp["anchorID"];
             let posemat = new Mat4(vp["transform"]).getTranspose();
@@ -143,7 +143,7 @@ export class IBRScene extends AObject {
         let poi = V4A(jsondata["pointOfInterest"]);
         let initCamPose = new Mat4(jsondata["initCameraPose"]).getTranspose();
 
-        let scene = new IBRScene();
+        let scene = new IBRSceneData();
         let captures = jsondata["captures"];
         for (let c of captures) {
             let nextCapturedImage = IBRCapturedImage.FromAppLFCaptureDict(

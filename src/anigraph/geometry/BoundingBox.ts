@@ -1,6 +1,6 @@
-import { Precision } from "../index";
-import { VectorBase} from "../index";
-import { TransformationInterface} from "../index";
+import { Precision } from "../";
+import { VectorBase} from "../";
+import { TransformationInterface} from "../";
 
 export abstract class BoundingBox<
   VertexType extends VectorBase,

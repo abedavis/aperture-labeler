@@ -22,7 +22,7 @@ export function AThreeJSContextComponent(props:AThreeJSContextComponentProps) {
         })();
     });
     return (
-        <div className="canvas">
+        <div className="threejscanvas">
             <div
                 className="anigraphcontainer"
                 ref={container}

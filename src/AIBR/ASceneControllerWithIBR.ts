@@ -1,6 +1,6 @@
 import { ASceneController } from "src/anigraph";
-import {ASceneModelWithIBR} from "./ASceneModelWithIBR";
+import {ASceneModelWithIBRData} from "./ASceneModelWithIBRData";
 
 export interface ASceneControllerWithIBR extends ASceneController{
-    model:ASceneModelWithIBR;
+    model:ASceneModelWithIBRData;
 }

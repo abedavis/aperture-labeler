@@ -192,6 +192,12 @@ export abstract class ASceneModel extends AModel implements HasModelMap, HasInte
         }), ASCENEMODEL_EVENT_HANDLES.SCENE_NODE_REMOVED);
     }
 
+    removeChild(child:AModelInterface){
+        let removedChild = this._removeChild(child, true, true);
+        this._removeModel(child);
+        return removedChild;
+    }
+
     async loadShader(name:string){
         return this.materials.loadShaderModel(name);
     }

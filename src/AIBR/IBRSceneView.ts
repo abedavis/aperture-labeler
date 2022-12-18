@@ -1,37 +1,40 @@
 import {
     AGraphicGroup,
     AMaterial, ANodeView, ASceneController,
-    ASerializable,
+    ASerializable, AShaderMaterial,
     ATriangleMeshGraphic, Color, NodeTransform3D, V3, VertexArray3D
 } from "../anigraph";
 import * as IBRShaders from "./IBRShaders"
-import {IBRSceneModel} from "./IBRSceneModel";
+import {IBRDataModel} from "./IBRDataModel";
+import * as THREE from "three";
 
 @ASerializable("IBRSceneView")
 export class IBRSceneView extends ANodeView{
-    // get controller():IBRSceneModel{return this._controller as unknown as IBRSceneModel;}
-    public element!: ATriangleMeshGraphic;
+    public focalPlane!: ATriangleMeshGraphic;
     public guiGroup!: AGraphicGroup;
     public targetSphereElement!: ATriangleMeshGraphic;
     public _guiCameraFrustaGroup!: AGraphicGroup;
     public guiMaterial!: AMaterial;
+    public focalPlaneMaterial!:AShaderMaterial;
 
-    get model():IBRSceneModel{
-        return this._model as IBRSceneModel;
+    get model():IBRDataModel{
+        return this._model as IBRDataModel;
     }
 
     get ibr() {
-        return this.model.ibr;
+        return this.model.sceneData;
     }
 
     init() {
-        this.element = new ATriangleMeshGraphic();
-        this.element.init(VertexArray3D.SquareXYUV(1), this.model.material.threejs);
+        this.guiMaterial = IBRShaders.CreateMaterial(IBRShaders.ShaderNames.Basic);
+
+        this.focalPlane = new ATriangleMeshGraphic();
+        this.focalPlane.init(VertexArray3D.SquareXYUV(1), this.model.material);
         this.guiGroup = new AGraphicGroup();
-        this.addGraphic(this.element);
+        this.addGraphic(this.focalPlane);
         this.addGraphic(this.guiGroup);
 
-        this.guiMaterial = IBRShaders.CreateMaterial(IBRShaders.ShaderNames.Basic);
+
         // @ts-ignore
         this.guiMaterial.threejs.wireframe = true;
 
@@ -40,20 +43,21 @@ export class IBRSceneView extends ANodeView{
             VertexArray3D.Sphere(0.5, 10, 10),
             this.guiMaterial.threejs
         );
-        this.targetSphereElement.setColor(Color.FromString("#ffffff"));
+        this.targetSphereElement.setColor(Color.FromString("#22ff22"));
         this.guiGroup.add(this.targetSphereElement);
+        this._resetGUICameraFrusta();
+        this._initViewSubscriptions();
+    }
 
+    _initViewSubscriptions(){
         let model = this.model;
         let self = this;
-
         this.subscribe(this.model.addTransformListener(()=>{
             self.guiGroup.setTransform(model.transform.getMatrix().getInverse());
         }), "ibr_view_gui_inverse_transform");
 
-        self._resetGUICameraFrusta();
-
         this.subscribe(
-            this.addEventListener(IBRSceneModel.EVENTS.IBR_SCENE_CHANGE, () => {
+            this.addEventListener(IBRDataModel.EVENTS.IBR_SCENE_CHANGE, () => {
                 self._guiCameraFrustaGroup.dispose();
                 self._resetGUICameraFrusta();
             })
@@ -109,7 +113,7 @@ export class IBRSceneView extends ANodeView{
             focusDistance * 100.0,
             1.0
         );
-        this.element.setTransform(focalPlacement);
+        this.focalPlane.setTransform(focalPlacement);
     }
 
     _resetGUICameraFrusta(size: number = 0.25) {

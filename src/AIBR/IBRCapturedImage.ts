@@ -144,15 +144,10 @@ export class IBRCapturedImage extends AObject {
         c.captureTime = IBRTimeStamp.FromDictCOLMAP(d);
         let q = Quaternion.FromWXYZ(d["rotation"]);
         let T = V3(d["translation"]);
-        let M_COLMAP = q.getMatrix();
-        T = q.getInverse().appliedTo(T).times(-1);
-        M_COLMAP.c3 = T.Vec3DH;
-        c.pose = NodeTransform3D.FromPoseMatrix(M_COLMAP);
-        //////////////
-        let posemat = c.pose.getMatrix();
-        posemat.c1 = posemat.c1.clone().times(-1);
-        posemat.c2 = posemat.c2.clone().times(-1);
-        c.pose = NodeTransform3D.FromPoseMatrix(posemat);
+
+        c.pose = new NodeTransform3D(T.times(-1), q.getInverse());
+
+
         c.fileName = d["filename"];
         if (d["viewID"] !== undefined) {
             c._viewID = d["viewID"];
