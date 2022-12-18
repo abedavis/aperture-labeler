@@ -2,7 +2,7 @@ import {ABasicMaterialModel, AMaterialManager, AShaderMaterial} from "../anigrap
 import {WebGLRenderTargetOptions} from "three/src/renderers/WebGLRenderTarget";
 import * as THREE from "three";
 import {BasicTextureShaderModel} from "../anigraph/rendering/material/shadermodels";
-import {ViewReprojectionShaderModel} from "../AIBRold/shadermodels";
+import {ViewReprojectionShaderModel} from "./shadermodels";
 
 enum ShaderNames{
     ViewReprojection='ViewReprojection',

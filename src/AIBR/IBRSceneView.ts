@@ -4,40 +4,38 @@ import {
     ASerializable,
     ATriangleMeshGraphic, Color, NodeTransform3D, V3, VertexArray3D
 } from "../anigraph";
-import * as IBRShaders from "../AIBRold/IBRShaders";
+import * as IBRShaders from "./IBRShaders"
 import {IBRSceneModel} from "./IBRSceneModel";
 
 @ASerializable("IBRSceneView")
 export class IBRSceneView extends ANodeView{
-    get controller():IBRSceneModel{return this._controller as unknown as IBRSceneModel;}
+    // get controller():IBRSceneModel{return this._controller as unknown as IBRSceneModel;}
     public element!: ATriangleMeshGraphic;
     public guiGroup!: AGraphicGroup;
     public targetSphereElement!: ATriangleMeshGraphic;
     public _guiCameraFrustaGroup!: AGraphicGroup;
     public guiMaterial!: AMaterial;
 
+    get model():IBRSceneModel{
+        return this._model as IBRSceneModel;
+    }
+
     get ibr() {
         return this.model.ibr;
     }
 
-    onGeometryUpdate() {
-        super.onGeometryUpdate();
-        this.element.setVerts(this.model.verts);
-    }
-
-    initGraphics() {
-        super.initGraphics();
-        this.element = new ATriangleMeshElement();
+    init() {
+        this.element = new ATriangleMeshGraphic();
         this.element.init(VertexArray3D.SquareXYUV(1), this.model.material.threejs);
-        this.guiGroup = new ARenderGroup();
-        this.addElement(this.element);
-        this.addElement(this.guiGroup);
+        this.guiGroup = new AGraphicGroup();
+        this.addGraphic(this.element);
+        this.addGraphic(this.guiGroup);
 
         this.guiMaterial = IBRShaders.CreateMaterial(IBRShaders.ShaderNames.Basic);
         // @ts-ignore
         this.guiMaterial.threejs.wireframe = true;
 
-        this.targetSphereElement = new ATriangleMeshElement();
+        this.targetSphereElement = new ATriangleMeshGraphic();
         this.targetSphereElement.init(
             VertexArray3D.Sphere(0.5, 10, 10),
             this.guiMaterial.threejs
@@ -47,14 +45,14 @@ export class IBRSceneView extends ANodeView{
 
         let model = this.model;
         let self = this;
-        this.addTransformChangeCallback(() => {
+
+        this.subscribe(this.model.addTransformListener(()=>{
             self.guiGroup.setTransform(model.transform.getMatrix().getInverse());
-            // model.transform.getMatrix().getInverse().assignTo(this.guiGroup.);
-        }, "ibr_view_gui_inverse_transform");
+        }), "ibr_view_gui_inverse_transform");
 
         self._resetGUICameraFrusta();
 
-        this.controller.subscribe(
+        this.subscribe(
             this.addEventListener(IBRSceneModel.EVENTS.IBR_SCENE_CHANGE, () => {
                 self._guiCameraFrustaGroup.dispose();
                 self._resetGUICameraFrusta();
@@ -115,10 +113,13 @@ export class IBRSceneView extends ANodeView{
     }
 
     _resetGUICameraFrusta(size: number = 0.25) {
-        this._guiCameraFrustaGroup = new ARenderGroup();
+        if(this._guiCameraFrustaGroup){
+            this._guiCameraFrustaGroup.dispose();
+        }
+        this._guiCameraFrustaGroup = new AGraphicGroup();
         let ibr = this.ibr;
         for (let v of this.ibr.capturedImages) {
-            let frustEl = new ATriangleMeshElement();
+            let frustEl = new ATriangleMeshGraphic();
             frustEl.init(
                 VertexArray3D.FrustumFromProjectionMatrix(v.camera.getMatrix(), size),
                 this.guiMaterial.threejs
@@ -128,5 +129,10 @@ export class IBRSceneView extends ANodeView{
         }
         this.guiGroup.add(this._guiCameraFrustaGroup);
         // model.transform.getMatrix().assignTo(this.threejs.matrix);
+    }
+
+
+    update(...args: any[]): void {
+        console.warn("Update not implemented")
     }
 }

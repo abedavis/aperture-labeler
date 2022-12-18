@@ -1,7 +1,7 @@
 import {AObject, AObjectState, ATexture, Mat4, NodeTransform3D, V4A, Vec3} from "../anigraph";
-import {IBRCapturedImage} from "../AIBRold/IBRCapturedImage";
-import {IBRCamera} from "../AIBRold/IBRCamera";
-import {loadJSONFromURL} from "../AIBRold/IBRUtils";
+import {IBRCapturedImage} from "./IBRCapturedImage";
+import {IBRCamera} from "./IBRCamera";
+import {loadJSONFromURL} from "./IBRUtils";
 
 enum IBRSceneJSONParams {
     Images = "image_poses",

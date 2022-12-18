@@ -2,19 +2,18 @@ import {
     ACamera, AController, AGLContext, AInteractionEvent,
     ANodeModel3D,
     AObject,
-    AObjectState, ASceneController,
+    AObjectState, ASceneController, ASceneModel,
     ASerializable, Mat4, NodeTransform3D, V2,
     V3, Vec2,
     Vec3, Vec4,
     Vector,
     VertexArray3D
 } from "../anigraph";
-import {IBRScene} from "../AIBRold/IBRScene";
-import {IBRCapturedImage} from "../AIBRold/IBRCapturedImage";
+import {IBRScene} from "./IBRScene";
+import {IBRCapturedImage} from "./IBRCapturedImage";
 import {folder} from "leva";
-import * as IBRShaders from "../AIBRold/IBRShaders";
 import * as THREE from "three";
-import {ViewReprojectionShaderMaterial} from "../AIBRold/shadermodels";
+import {ViewReprojectionShaderMaterial} from "./shadermodels";
 import {MAX_TEX_PER_CALL} from "../anigraph/rendering/material/shadermodels";
 import {AWheelInteraction} from "../anigraph/interaction/AWheelInteraction";
 
@@ -68,7 +67,9 @@ function gaussian(x: number, sigma: number, m: number = 0) {
  * The model's verts and material correspond to the focal plane
  */
 @ASerializable("IBRSceneModel")
-export class IBRSceneModel extends ASceneController {
+export class IBRSceneModel extends ANodeModel3D {
+
+
     static TimeFilters = IBR_TEMPORAL_FILTERS;
     static SpaceFilters = IBR_SPATIAL_FILTERS;
     static TimeInterpolationModes = IBR_TIME_INTERPOLATION_MODES;
@@ -268,56 +269,6 @@ export class IBRSceneModel extends ASceneController {
         };
     }
 
-    // set targetTimeIndex(value:number){
-    //     this.setProgressByTimeOrder(value);
-    // }
-
-    // set targetTime(value:number){
-    //     const self = this;
-    //     // this._params.targetTime=value;
-    //     this._targetTime=value;
-    //
-    //     if(self.ibr ===undefined){
-    //         return;
-    //     }
-    //     for(let j=0;j<self.ibr.capturedImages.length;j++){
-    //         if(self.ibr.capturedImages[j].time<=self.targetTime){
-    //             let ifloor = j;
-    //             let iceil = j+1;
-    //             if(iceil === self.ibr.nCapturedImages){
-    //                 self._targetTimeIndex=ifloor;
-    //                 self.updateReconstruction();
-    //                 return;
-    //             }
-    //             let tfloor = self.ibr.capturedImages[ifloor].time;
-    //             let tceil = self.ibr.capturedImages[iceil].time;
-    //             let palpha = (self.targetTime-tfloor)/(tceil-tfloor);
-    //             self._targetTimeIndex=ifloor+palpha;
-    //             self.updateReconstruction();
-    //             return;
-    //         }
-    //     }
-    //     self._targetTimeIndex = self.ibr.nCapturedImages-1;
-    //     self.updateReconstruction();
-    //     return;
-    //
-    // }
-
-    // get targetTime():number{
-    //     // if(this.ibr.capturedImages.length<1){
-    //     //     return new IBRTimeStamp();
-    //     // }
-    //     // if(this._sortedViewsSpace.length<1){
-    //     //     return new IBRTimeStamp();
-    //     // }
-    //     // let targetTimeView = this._targetTime??this.closestView;
-    //     // return targetTimeView.captureTime;
-    //     return this._targetTime;
-    // }
-
-    // get targetTimeStamp():IBRTimeStamp{
-    //     return IBRTimeStamp.FromMilliseconds(this._targetTime);
-    // }
 
     static EVENTS = IBR_MODEL_EVENTS;
     // _targetSphere!:AMeshModel;
@@ -816,18 +767,4 @@ export class IBRSceneModel extends ASceneController {
             targetV.times(focusDistance)
         );
     }
-
-    initInteractions(): void {
-    }
-
-    initModelViewSpecs(): void {
-    }
-
-    initScene(): Promise<void> {
-        return Promise.resolve(undefined);
-    }
-
-    onAnimationFrameCallback(context: AGLContext): void {
-    }
-
 }

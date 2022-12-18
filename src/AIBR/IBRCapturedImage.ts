@@ -1,7 +1,6 @@
 import {AObject, AObjectState, ATexture, Mat4, NodeTransform3D, Quaternion, V3, Vec3} from "../anigraph";
-import {IBRCamera} from "../AIBRold/IBRCamera";
-import {CameraPose} from "../AIBRold/CameraPose";
-import {IBRTimeStamp} from "../AIBRold/IBRTimeStamp";
+import {IBRCamera} from "./IBRCamera";
+import {IBRTimeStamp} from "./IBRTimeStamp";
 import * as d3 from "d3";
 
 export class IBRCapturedImage extends AObject {
@@ -69,7 +68,8 @@ export class IBRCapturedImage extends AObject {
         c.name = d["anchorID"];
         c._viewID = d["anchorID"];
         let posemat = new Mat4(d["transform"]);
-        c.pose = CameraPose.FromPoseMatrix(posemat);
+        c.pose = NodeTransform3D.FromPoseMatrix(posemat);
+
     }
 
     static FromAppLFCaptureDict(
@@ -88,9 +88,9 @@ export class IBRCapturedImage extends AObject {
         c.captureTime = IBRTimeStamp.FromString(d["timeStamp"]);
         if (viewTransform) {
             // c.pose =CameraPose.FromPoseMatrix(c._poseMatrixIn);
-            c.pose = CameraPose.FromPoseMatrix(viewTransform.times(c._poseMatrixIn));
+            c.pose = NodeTransform3D.FromPoseMatrix(viewTransform.times(c._poseMatrixIn));
         } else {
-            c.pose = CameraPose.FromPoseMatrix(c._poseMatrixIn);
+            c.pose = NodeTransform3D.FromPoseMatrix(c._poseMatrixIn);
             // c.pose =CameraPose.FromPoseMatrix(c._poseMatrixIn);
         }
         c.pose.position = c.pose.position.times(5.0);
@@ -119,9 +119,9 @@ export class IBRCapturedImage extends AObject {
         c._poseMatrixIn = new Mat4(d["relativeCameraPose"]).getTranspose();
         c.captureTime = IBRTimeStamp.FromString(d["timeStamp"]);
         if (viewTransform) {
-            c.pose = CameraPose.FromPoseMatrix(viewTransform.times(c._poseMatrixIn));
+            c.pose = NodeTransform3D.FromPoseMatrix(viewTransform.times(c._poseMatrixIn));
         } else {
-            c.pose = CameraPose.FromPoseMatrix(c._poseMatrixIn);
+            c.pose = NodeTransform3D.FromPoseMatrix(c._poseMatrixIn);
         }
         console.log(
             `Camera Pose:\n    Position:${c.pose.position}\n   Matrix:\n${c.pose
@@ -147,12 +147,12 @@ export class IBRCapturedImage extends AObject {
         let M_COLMAP = q.getMatrix();
         T = q.getInverse().appliedTo(T).times(-1);
         M_COLMAP.c3 = T.Vec3DH;
-        c.pose = CameraPose.FromPoseMatrix(M_COLMAP);
+        c.pose = NodeTransform3D.FromPoseMatrix(M_COLMAP);
         //////////////
         let posemat = c.pose.getMatrix();
         posemat.c1 = posemat.c1.clone().times(-1);
         posemat.c2 = posemat.c2.clone().times(-1);
-        c.pose = CameraPose.FromPoseMatrix(posemat);
+        c.pose = NodeTransform3D.FromPoseMatrix(posemat);
         c.fileName = d["filename"];
         if (d["viewID"] !== undefined) {
             c._viewID = d["viewID"];
@@ -168,6 +168,14 @@ export class IBRCapturedImage extends AObject {
         c.camera = new IBRCamera();
         return c;
     }
+
+    setSpatialSortValue(score: number) {
+        this._currentSpatialSortValue = score;
+    }
+    setTemporalSortValue(score: number) {
+        this._currentTemporalSortValue = score;
+    }
+
 
     static GetSortedByDate(views_in: IBRCapturedImage[]) {
         let views = views_in.slice();
@@ -187,6 +195,80 @@ export class IBRCapturedImage extends AObject {
         return views;
     }
 
+    static GetSortedByReconstructionScore(
+        views_in: IBRCapturedImage[],
+        targetViewPose?: NodeTransform3D,
+        focus?: NodeTransform3D | Vec3
+    ) {
+        let views = views_in.slice();
+        if (targetViewPose !== undefined) {
+            if (focus === undefined) {
+                console.error(
+                    "only provided targetViewPose, must provide focus as well"
+                );
+            } else {
+                let focusPoint =
+                    focus instanceof NodeTransform3D ? focus.position : focus;
+                for (let v of views) {
+                    let fv = v.pose.position.minus(focusPoint).getNormalized();
+                    let ft = targetViewPose.position.minus(focusPoint).getNormalized();
+                    v.setSpatialSortValue(fv.dot(ft));
+                }
+            }
+        }
+        function reconstructionscore(a: IBRCapturedImage, b: IBRCapturedImage) {
+            return b._currentSpatialSortValue - a._currentSpatialSortValue;
+        }
+        views.sort(reconstructionscore);
+        return views;
+    }
+
+    static GetSortedByTimeProximity(views_in: IBRCapturedImage[], time: number) {
+        let views = views_in.slice();
+        function timescore(a: IBRCapturedImage, b: IBRCapturedImage) {
+            return Math.abs(time - a.time) - Math.abs(time - b.time);
+        }
+        views.sort(timescore);
+        return views;
+    }
+
+    static GetSortedByTimeScore(
+        views_in: IBRCapturedImage[],
+        reference?: number
+    ) {
+        let views = views_in.slice();
+        function timescore(a: IBRCapturedImage, b: IBRCapturedImage) {
+            return b._currentTemporalSortValue - a._currentTemporalSortValue;
+        }
+        let referenceScore = reference ?? 0;
+        function relativetimescore(a: IBRCapturedImage, b: IBRCapturedImage) {
+            return (
+                Math.abs(a._currentTemporalSortValue - referenceScore) -
+                Math.abs(b._currentTemporalSortValue - referenceScore)
+            );
+        }
+        if (reference === undefined) {
+            views.sort(timescore);
+        } else {
+            views.sort(relativetimescore);
+        }
+        return views;
+    }
+
+    static GetSortedBySpaceScore(
+        views_in: IBRCapturedImage[],
+        coefficient: number = 1
+    ) {
+        let views = views_in.slice();
+        function timescore(a: IBRCapturedImage, b: IBRCapturedImage) {
+            return (
+                coefficient * (b._currentSpatialSortValue - a._currentSpatialSortValue)
+            );
+        }
+        views.sort(timescore);
+        return views;
+    }
+
     static GetActive(views_in: IBRCapturedImage[]) {
         let views = [];
         for (let v of views_in) {
@@ -196,6 +278,7 @@ export class IBRCapturedImage extends AObject {
         }
         return views;
     }
+
 }
 
 // class SyntheticCapturedImage extends CapturedImage{

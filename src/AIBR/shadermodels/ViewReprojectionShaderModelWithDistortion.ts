@@ -1,11 +1,10 @@
-import {ATexture, ShaderManager, V2, Vec2} from "src/anigraph";
 import {
+    ATexture, ShaderManager, V2, Vec2,
     ASerializable,
     ClassInterface, Mat4
-
-} from "src/anigraph";
-import {MixTexturesShaderMaterial, MixTexturesShaderModel,MAX_TEX_PER_CALL} from "src/anigraph/amvc/material/shadermodels/MixTexturesShaderModel"
-import {ShaderMaterialParameters} from "three/src/materials/ShaderMaterial";
+} from "../../anigraph";
+import {MixTexturesShaderMaterial, MixTexturesShaderModel,MAX_TEX_PER_CALL} from "../../anigraph/rendering/material/shadermodels";
+import type {ShaderMaterialParameters} from "three/src/materials/ShaderMaterial";
 import {IBRCapturedImage} from "../IBRCapturedImage";
 import * as THREE from "three";
 
