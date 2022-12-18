@@ -17,7 +17,7 @@
     "jsx": "react-jsx",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": "./final-project-starter-cs4620-fa22-main"
+    "baseUrl": "."
   },
   "include": [
     "src"

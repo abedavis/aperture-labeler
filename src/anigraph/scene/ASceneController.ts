@@ -2,11 +2,11 @@ import * as THREE from "three";
 import {
     AController, AModel,
     AModelInterface, AObjectNode, AObjectState,
-    AView,
+    AView, GetAppState,
     HasModelViewMap,
     SceneControllerInterface
 } from "../base";
-import {AInteractionEvent} from "../interaction";
+import {AInteractionEvent, AInteractionMode, HasInteractionModeCallbacks} from "../interaction";
 import {ClassInterface} from "../basictypes";
 import {AGLContext, AGLRenderWindow, ARenderDelegate, AShaderModel, ShaderManager} from "../rendering";
 import {ASceneModel, SceneEvents} from "./ASceneModel";
@@ -16,6 +16,7 @@ import {ANodeModel} from "./nodeModel";
 import {_ANodeView, ANodeView} from "./nodeView";
 import {AModelViewClassMap, AMVClassSpec, AMVClassSpecDetails} from "../base/amvc/AModelViewClassSpec";
 import {ADataTexture} from "../rendering/image";
+import {ASceneInteractionMode} from "./interactionmodes";
 
 
 export enum SceneControllerSubscriptions {
@@ -26,6 +27,8 @@ export enum SceneControllerSubscriptions {
 export interface RenderTargetInterface{
     target:THREE.WebGLRenderTarget|null
 }
+
+const INTERACTION_MODE_APP_STATE = "InteractionMode";
 
 export abstract class ASceneController extends AController implements ARenderDelegate, HasModelViewMap, SceneControllerInterface {
     @AObjectState protected readyToRender:boolean;
@@ -104,6 +107,7 @@ export abstract class ASceneController extends AController implements ARenderDel
         // this._cameraView = ACameraView.Create(this.model.cameraModel);
         // this.addView(this._cameraView);
         await this.initScene();
+        this._initInteractionsListener();
         this.initInteractions();
         this.addModelSubscriptions();
 
@@ -256,6 +260,55 @@ export abstract class ASceneController extends AController implements ARenderDel
     }
     async loadLineShader(name:string){
         return this.model.loadLineShader(name);
+    }
+
+
+
+    _setCurrentInteractionMode(name?:string){
+        super.setCurrentInteractionMode(name);
+    }
+
+    setCurrentInteractionMode(name?: string) {
+        this._setCurrentInteractionMode(name);
+        this._updateInteractionModeOptions();
+    }
+
+
+    _initInteractionsListener(){
+        const self = this;
+        this.subscribeToAppState(INTERACTION_MODE_APP_STATE, (v:string)=>{
+            /**
+             * Call _setCurrentInteractionMode here, which just calls the parent version of the function.
+             * This is to avoid an infinite loop caused by calling _updateInteractionModeOptions
+             */
+            self._setCurrentInteractionMode(v);
+        }, INTERACTION_MODE_APP_STATE)
+    }
+
+    defineInteractionMode(name: string, mode?: AInteractionMode) {
+        super.defineInteractionMode(name, mode);
+        this._updateInteractionModeOptions();
+    }
+
+    _updateInteractionModeOptions(){
+        let appState = GetAppState();
+        appState.setSelectionControl(
+            INTERACTION_MODE_APP_STATE,
+            this._currentInteractionModeName,
+            this._interactions.getGUISelectableModesList()
+        )
+        appState.updateControlPanel();
+    }
+
+    createNewInteractionMode(
+        name:string,
+        interactionCallbacks?:HasInteractionModeCallbacks
+    ){
+        if(this._interactions.modes[name]){
+            throw new Error(`Tried to create interaction mode "${name}", but mode with this name is already defined!`)
+        }
+        let newInteractionMode = new ASceneInteractionMode(name, this, interactionCallbacks);
+        this.defineInteractionMode(name, newInteractionMode);
     }
 
 }

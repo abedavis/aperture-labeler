@@ -1,4 +1,4 @@
-import {AGraphicElement, ANodeView} from "../../../../anigraph";
+import {AGraphicElement, ANodeView} from "../../../anigraph";
 import {UnitQuadModel} from "./UnitQuadModel";
 
 export class UnitQuadView extends ANodeView{

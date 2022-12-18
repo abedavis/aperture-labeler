@@ -145,30 +145,6 @@ export class IBRCamera{
         let ogly0=0;
         let drange = zfar-znear;
 
-        // let proj = new Mat4(
-        //     fx/width, 0, (width-2*x0)/width, 0,
-        //     0, fy/width, (height-2*y0)/height, 0,
-        //     0, 0, (-zfar-znear)/(drange), -2*zfar*znear/(drange),
-        //     0,0,-1,0
-        // )
-
-        // let proj = Mat4.PerspectiveFromFOV(60, 1/1.7);
-
-        // negative m11?
-        // let proj = new Mat4(
-        //     2*fx/width, -2*K.m01/width, (width-2*x0+2*oglx0)/width, 0,
-        //     0, -2*fy/height, (height-2*y0+2*ogly0)/height, 0,
-        //     0, 0, (-zfar-znear)/(drange), -2*zfar*znear/(drange),
-        //     0,0,-1,0
-        // )
-
-        // let proj = new Mat4(
-        //     2*fx/width, -2*K.m01/width, (width-2*x0+2*oglx0)/width, 0,
-        //     0, 2*fy/height, (height-2*y0+2*ogly0)/height, 0,
-        //     0, 0, (-zfar-znear)/(drange), -2*zfar*znear/(drange),
-        //     0,0,-1,0
-        // )
-
         let proj = new Mat4(
             2*fx/width, -2*K.m01/width, (width-2*x0+2*oglx0)/width, 0,
             0, 2*fy/height, (height-2*y0+2*ogly0)/height, 0,
@@ -176,33 +152,7 @@ export class IBRCamera{
             0,0,-1,0
         )
 
-
-        // proj.m02 = -proj.m02;
-        // proj.m12 = -proj.m12;
-        // proj.m22 = -proj.m22;
-
-        // let proj = new Mat4(
-        //     2*fx/width, -2*K.m01/width, (width-2*x0+2*oglx0)/width, 0,
-        //     0, -2*fy/height, (height-2*y0+2*ogly0)/height, 0,
-        //     0, 0, (-zfar-znear)/(drange), -2*zfar*znear/(drange),
-        //     0,0,-1,0
-        // )
-        // let proj = Mat4.PerspectiveFromNearPlane(-fx/width,fx/width, -fy/height, fy/height);
-        // proj = proj.getInverse();
-        // console.log(proj.asPrettyString());
-
         return proj
-
-        // let proj = new Mat4(
-        //     alpha, s, -this.center.x, 0,
-        //     0, beta, -this.center.y, 0,
-        //     0, 0, A, B,
-        //     0, 0, -1, 0
-        // )
-        //
-        // let NDC = new Mat4(
-        //
-        // )
     }
 }
 

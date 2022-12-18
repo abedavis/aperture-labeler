@@ -1,4 +1,4 @@
-import {AMaterial, ANodeModel3D, ASerializable, Mat4, NodeTransform3D, VertexArray3D} from "../../../../anigraph";
+import {AMaterial, ANodeModel3D, ASerializable, Mat4, NodeTransform3D, VertexArray3D} from "../../../anigraph";
 
 @ASerializable("AUnitQuadModel")
 export class UnitQuadModel extends ANodeModel3D{

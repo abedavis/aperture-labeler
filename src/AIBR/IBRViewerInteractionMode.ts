@@ -1,61 +1,50 @@
+import { ASceneInteractionMode } from "src/anigraph/scene/interactionmodes";
 import {
-    AClickInteraction,
     ADOMPointerMoveInteraction, ADragInteraction,
     AInteractionEvent,
     AKeyboardInteraction,
-    ASerializable
-} from "../../../anigraph";
-import {AWheelInteraction} from "../../../anigraph/interaction/AWheelInteraction";
-import {ASceneInteractionMode} from "../../../anigraph/scene/interactionmodes/ASceneInteractionMode";
-import {NodeTransform3D, Quaternion, Vec2, Vec3} from "../../../anigraph";
-import type {HasInteractionModeCallbacks} from "../../../anigraph";
-import {MainSceneController} from "../Scene/MainSceneController";
-import {MainAppInteractionMode} from "../../BaseClasses/MainAppInteractionMode";
-
+    ASceneModel,
+    ASerializable, NodeTransform3D, Quaternion, Vec2, Vec3
+} from "../anigraph";
+import {ASceneModelWithIBR} from "./ASceneModelWithIBR";
+import type {ASceneControllerWithIBR} from "./ASceneControllerWithIBR";
+import type {HasInteractionModeCallbacks} from "../anigraph";
+import {AWheelInteraction} from "../anigraph/interaction/AWheelInteraction";
 
 @ASerializable("ExamplePlayerInteractionMode")
-export class ExamplePlayerInteractionMode extends MainAppInteractionMode{
-
-    /**
-     * You may want to define some parameters to adjust the speed of controls...
-     */
-    mouseMovementSpeed:number=3;
-    keyboardMovementSpeed:number=0.25;
+export class IBRViewerInteractionMode extends ASceneInteractionMode{
+    cameraMovementSpeed:number=0.02;
     cameraOrbitSpeed:number=3;
 
+    get owner(): ASceneControllerWithIBR {
+        return this._owner as ASceneControllerWithIBR;
+    }
+
+    get model(): ASceneModelWithIBR {
+        return this.owner.model;
+    }
     get camera(){
         return this.model.camera;
     }
 
-    constructor(owner?:MainSceneController,
+    constructor(owner?:ASceneControllerWithIBR,
                 name?:string,
                 interactionCallbacks?:HasInteractionModeCallbacks,
                 ...args:any[]) {
         super(name, owner, interactionCallbacks, ...args);
-        // this.reset();
-    }
-
-    get player(){
-        return this.model.player;
     }
 
     reset(){
-        // You can reset the control mode here
-        this.camera.pose = NodeTransform3D.LookAt(
-            this.player.position.plus(Vec3.UnitZ().times(3)),
-            this.player.position,
-            Vec3.UnitY()
-        )
     }
 
     /**
      * This gets called immediately before the interaction mode is activated. For now, we will call reset()
      * @param args
      */
-    beforeActivate(...args:any[]) {
-        super.beforeActivate(...args);
-        this.reset();
-    }
+    // beforeActivate(...args:any[]) {
+    //     super.beforeActivate(...args);
+    //     this.reset();
+    // }
 
     /**
      * Create an instance in a single call, instead of calling new followed by init
@@ -64,7 +53,7 @@ export class ExamplePlayerInteractionMode extends MainAppInteractionMode{
      * @returns {ASceneInteractionMode}
      * @constructor
      */
-    static Create(owner: MainSceneController, ...args: any[]) {
+    static Create(owner: ASceneControllerWithIBR, ...args: any[]) {
         let controls = new this();
         controls.init(owner);
         return controls;
@@ -76,22 +65,26 @@ export class ExamplePlayerInteractionMode extends MainAppInteractionMode{
     }
 
     onMouseMove(event:AInteractionEvent, interaction: ADOMPointerMoveInteraction){
-        // console.log(`mouse move! ${event}`);
     }
 
     onKeyDown(event:AInteractionEvent, interaction:AKeyboardInteraction){
         if(interaction.keysDownState['w']){
-            this.player.position.y = this.player.position.y+this.keyboardMovementSpeed;
+            this.camera.pose.position = this.camera.pose.position.plus(this.camera.forward.times(this.cameraMovementSpeed));
         }
         if(interaction.keysDownState['a']){
-            this.player.position.x = this.player.position.x-this.keyboardMovementSpeed;
+            this.camera.pose.position = this.camera.pose.position.plus(this.camera.right.times(-this.cameraMovementSpeed));
         }
         if(interaction.keysDownState['s']){
-            this.player.position.y = this.player.position.y-this.keyboardMovementSpeed;
-
+            this.camera.pose.position = this.camera.pose.position.plus(this.camera.forward.times(-this.cameraMovementSpeed));
         }
         if(interaction.keysDownState['d']){
-            this.player.position.x = this.player.position.x+this.keyboardMovementSpeed;
+            this.camera.pose.position = this.camera.pose.position.plus(this.camera.right.times(this.cameraMovementSpeed));
+        }
+        if(interaction.keysDownState['r']){
+            this.camera.pose.position = this.camera.pose.position.plus(this.camera.up.times(this.cameraMovementSpeed));
+        }
+        if(interaction.keysDownState['f']){
+            this.camera.pose.position = this.camera.pose.position.plus(this.camera.up.times(-this.cameraMovementSpeed));
         }
     }
 
@@ -122,11 +115,15 @@ export class ExamplePlayerInteractionMode extends MainAppInteractionMode{
         }
         let mouseMovement = event.ndcCursor.minus(interaction.getInteractionState('lastCursor'));
         interaction.setInteractionState('lastCursor', event.ndcCursor);
-
-        let movementX = mouseMovement.x*this.mouseMovementSpeed;
-        let movementY = mouseMovement.y*this.mouseMovementSpeed;
-        this.player.position = this.player.position.plus(new Vec3(movementX, movementY, 0));
-        this.camera.transform.position = this.camera.position.plus(new Vec3(movementX, movementY, 0));
+        let rotationX = -mouseMovement.x*this.cameraOrbitSpeed;
+        let rotationY = mouseMovement.y*this.cameraOrbitSpeed;
+        let qX = Quaternion.FromAxisAngle(this.camera.up, rotationX);
+        let qY = Quaternion.FromAxisAngle(this.camera.right, rotationY);
+        let newPose = this.camera.pose.clone();
+        newPose = new NodeTransform3D(qX.appliedTo(newPose.position), newPose.rotation.times(qX));
+        newPose = new NodeTransform3D(qY.appliedTo(newPose.position), newPose.rotation.times(qY));
+        this.cameraModel.setPose(newPose);
+        this.cameraModel.signalTransformUpdate();
     }
     onDragEnd(event: AInteractionEvent, interaction: ADragInteraction): void {
         let cursorWorldCoordinates:Vec2|null = event.ndcCursor;
