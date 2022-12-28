@@ -16,6 +16,7 @@ import * as THREE from "three";
 import {ASceneControllerWithIBR} from "../../../AIBR/ASceneControllerWithIBR";
 import {IBRDataModel, IBRSceneView} from "../../../AIBR";
 import {IBRViewerInteractionMode} from "../../../AIBR/IBRViewerInteractionMode";
+import { PaintInteractionMode } from "src/AIBR/DepthPainter/PaintInteractionMode";
 
 
 
@@ -42,6 +43,9 @@ export class MainSceneController extends ASceneController implements ASceneContr
 
         let ibrInteractionMode = new IBRViewerInteractionMode(this);
         this.defineInteractionMode("IBR", ibrInteractionMode);
+
+        let paintInteractionMode = new PaintInteractionMode(this);
+        this.defineInteractionMode("DepthPainter", paintInteractionMode);
 
         this.setCurrentInteractionMode("IBR")
     }

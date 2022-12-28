@@ -97,8 +97,10 @@ export abstract class ACameraClass<T extends TransformationInterface> extends AO
     // abstract onCanvasResize(width:number, height:number):void;
 
     get aspect(){
-        let wh = this._nearPlaneWH;
-        return wh.x/wh.y;
+        // this.lrbt is not initialized 
+        // let wh = this._nearPlaneWH;
+        // return wh.x/wh.y;
+        return this.projection.m11 / this.projection.m00;
     }
 
     /**
@@ -167,8 +169,9 @@ export abstract class ACameraClass<T extends TransformationInterface> extends AO
                 break;
 
             case ACamera.PROJECTION_TYPE.PERSPECTIVE:
-                let fov = Math.atan(this.frustumTop/this.zNear);
-                return new THREE.PerspectiveCamera(fov, this.aspect, this.zNear, this.zFar);
+                // let fov = Math.atan(this.frustumTop/this.zNear);
+                const fov = Math.atan( 1.0/this.projection.m11) / Math.PI * 180 * 2;
+                return new THREE.PerspectiveCamera(fov, this.aspect, -this.zNear, -this.zFar);
                 break;
 
             default:

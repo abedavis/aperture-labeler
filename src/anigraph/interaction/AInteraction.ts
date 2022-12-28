@@ -151,7 +151,7 @@ export class ADOMInteractionEvent extends AInteractionEvent{
     }
     get positionInContext(){
         const contextElement = this.interaction.owner.eventTarget;
-        if(contextElement instanceof Element) {
+        if(contextElement instanceof HTMLElement) {
             const svgrect = contextElement.getBoundingClientRect();
             // @ts-ignore
             return new Vec2(this._event.clientX-svgrect.left, this._event.clientY-svgrect.top);
@@ -186,7 +186,7 @@ export class ADOMInteractionEvent extends AInteractionEvent{
             // @ts-ignore
             let cunnormalized = new Vec2(this._event.clientX - contextRect.left - midpoint.x, contextRect.top - this._event.clientY + midpoint.y
             );
-            return new Vec2(cunnormalized.x/contextw, cunnormalized.y/contexth);
+            return new Vec2(cunnormalized.x/contextw, cunnormalized.y/contexth).times(2);
         }else{
             return null;
         }

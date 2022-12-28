@@ -9,6 +9,8 @@ uniform float weights[16];
 uniform int deviceOrientations[16];
 uniform int nTextures;
 
+uniform sampler2D depthMap;
+
 uniform sampler2D tex0Map;
 uniform sampler2D tex1Map;
 uniform sampler2D tex2Map;
@@ -23,11 +25,11 @@ uniform sampler2D tex10Map;
 uniform sampler2D tex11Map;
 uniform sampler2D tex12Map;
 uniform sampler2D tex13Map;
-uniform sampler2D tex14Map;
+// uniform sampler2D tex14Map;
 uniform sampler2D tex15Map;
 varying vec2 vUv;
-varying vec4 worldCoordinates;
 
+varying vec4 vPosition;
 
 
 vec4 sampleTexValue(int index, vec2 uv){
@@ -75,9 +77,9 @@ vec4 sampleTexValue(int index, vec2 uv){
         return texture(tex13Map, uv);
     }
 
-    if(index==14){
-        return texture(tex14Map, uv);
-    }
+    // if(index==14){
+    //     return texture(tex14Map, uv);
+    // }
 
     return texture(tex15Map, uv);
 }
@@ -139,10 +141,18 @@ vec4 sampleWithBoundary(vec2 uv, int texIndex){
 }
 
 
-void main()    {
-//    gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
-//    gl_FragColor = sampleTexValue(0,vUv);
-    //    vec4 inputPix = texture(inputMap, vUv);
+void main() {
+    vec4 depthData = texture(depthMap, vUv);
+    float depth = depthData.x;
+    float hasDepth = depthData.y;
+    float hasPaintMark = depthData.z;
+    vec4 worldCoordinates;
+    if (hasDepth > 0.5) {
+        worldCoordinates = inverse(viewMatrix) * vec4(vPosition.xyz / vPosition.z * (-depth), 1.0);
+    } else {
+        worldCoordinates = inverse(viewMatrix) * vPosition;
+    }
+
     vec4 oval = vec4(0.0,0.0,0.0,0.0);
     float oweights = 0.0;
 
@@ -154,9 +164,10 @@ void main()    {
         oval = oval + sampleWithBoundary(rpcoords, tx);
     }
 
-
-
     gl_FragColor = vec4(oval.xyz/oweights, 1.0);
-//    gl_FragColor = vec4(1.0, 0.0, 1.0, 1.0);
+    
+    if (hasPaintMark > 0.5) {
+        gl_FragColor = 0.8 * gl_FragColor + 0.2 * vec4(0.5, 0.0, 0.0, 1.0);
+    }
 }
 

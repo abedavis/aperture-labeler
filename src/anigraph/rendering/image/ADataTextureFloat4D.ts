@@ -30,4 +30,22 @@ export class ADataTextureFloat4D extends ADataTexture<PixelDataFloat4D>{
         this.setPixelData(data);
     }
 
+    setEntry(x: number, y: number, channel: number, value: number) {
+        let hi = Math.round(y);
+        let wi = Math.round(x);
+        
+        // @ts-ignore
+        this.pixelData.data.set([value], (hi*(this.width)+wi)*this.nChannels + channel)
+    }
+
+    setChannel(channel: number, value: number) {
+        const valArr = [value];
+        for (let i=0; i < this.width; i++) {
+            for (let j=0; j < this.height; j++) {
+                // @ts-ignore
+                this.pixelData.data.set(valArr, (j*(this.width)+i)*this.nChannels + channel)
+            }
+        }
+    }
+
 }

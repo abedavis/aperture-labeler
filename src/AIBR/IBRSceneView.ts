@@ -94,6 +94,13 @@ export class IBRSceneView extends ANodeView{
             }),
             "IBR Scene View showFocusSphere"
         );
+
+        this.subscribe(
+            model.addEventListener("paintBrushMoved", () => {
+                self.paint();
+            }),
+            "Paint on texture"
+        )
     }
 
     updateFocalPlane() {
@@ -109,8 +116,8 @@ export class IBRSceneView extends ANodeView{
             cameraPose.rotation.Mat4().c1.Point3D
         );
         focalPlacement.scale = V3(
-            focusDistance * 100.0,
-            focusDistance * 100.0,
+            focusDistance * 2,
+            focusDistance * 2,
             1.0
         );
         this.focalPlane.setTransform(focalPlacement);
@@ -139,4 +146,12 @@ export class IBRSceneView extends ANodeView{
     update(...args: any[]): void {
         console.warn("Update not implemented")
     }
+
+    paint() {
+        const intersect = this.model.raycaster.intersectObject(this.focalPlane.threejs)[0];
+        if (!intersect) return;
+        this.model.updateDepthMap(intersect.uv!);
+    }
+
+
 }

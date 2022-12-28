@@ -3,7 +3,7 @@ import {
     ANodeModel3D,
     AObject,
     AObjectState, ASceneController, ASceneModel,
-    ASerializable, Mat4, NodeTransform3D, V2,
+    ASerializable, Color, Mat4, NodeTransform3D, V2,
     V3, Vec2,
     Vec3, Vec4,
     Vector,
@@ -17,6 +17,7 @@ import {ViewReprojectionShaderMaterial} from "./shadermodels";
 import {MAX_TEX_PER_CALL} from "../anigraph/rendering/material/shadermodels";
 import {AWheelInteraction} from "../anigraph/interaction/AWheelInteraction";
 import * as IBRShaders from "./IBRShaders";
+import { ADataTextureFloat1D, ADataTextureFloat4D } from "src/anigraph/rendering/image";
 
 enum CONSTANTS {
     FOCUS_DISTANCE_CHANGE_FACTOR = 0.01,
@@ -335,6 +336,8 @@ export class IBRDataModel extends ANodeModel3D {
             }),
             "timeFilter change update targetTimeValue"
         );
+
+        this.initDepthMap();
     }
 
     get focusDistance() {
@@ -780,4 +783,43 @@ export class IBRDataModel extends ANodeModel3D {
             targetV.times(focusDistance)
         );
     }
+
+    raycaster: THREE.Raycaster = new THREE.Raycaster();
+    updateRaycaster(pointer: Vec2, camera: THREE.Camera) {
+        this.raycaster.setFromCamera(pointer, camera);
+    }
+
+    paintedDepthMap!: ADataTextureFloat4D;
+    brushRadius: number = 3;
+
+    initDepthMap() {
+        this.paintedDepthMap = ADataTextureFloat4D.CreateSolid(100, 100, [0, 0, 0, 0]);
+        this.paintedDepthMap.setMinFilter(THREE.LinearFilter);
+        this.paintedDepthMap.setMagFilter(THREE.LinearFilter);
+        this.material.setDepthMap(this.paintedDepthMap);
+    }
+
+    updateDepthMap(uv: THREE.Vector2) {
+        const {width, height} = this.paintedDepthMap;
+        const x = uv.x * width;
+        const y = uv.y * height;
+        const depthData = new Color(this.focusDistance, 1.0, 1.0, 0);
+        for (let i=-this.brushRadius; i < this.brushRadius+1; i++) {
+            for (let j=-this.brushRadius; j < this.brushRadius+1; j++) {
+                this.paintedDepthMap.setPixelNN(
+                    x + i,
+                    y + j,
+                    depthData
+                );
+            }
+        }
+        
+        this.paintedDepthMap.setTextureNeedsUpdate();
+    }
+
+    clearPaintMarks() {
+        this.paintedDepthMap.setChannel(2, 0);
+        this.paintedDepthMap.setTextureNeedsUpdate();
+    }
+
 }
