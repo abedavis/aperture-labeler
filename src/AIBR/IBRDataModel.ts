@@ -3,7 +3,7 @@ import {
     ANodeModel3D,
     AObject,
     AObjectState, ASceneController, ASceneModel,
-    ASerializable, Mat4, NodeTransform3D, V2,
+    ASerializable, Color, Mat4, NodeTransform3D, V2,
     V3, Vec2,
     Vec3, Vec4,
     Vector,
@@ -17,6 +17,7 @@ import {ViewReprojectionShaderMaterial} from "./shadermodels";
 import {MAX_TEX_PER_CALL} from "../anigraph/rendering/material/shadermodels";
 import {AWheelInteraction} from "../anigraph/interaction/AWheelInteraction";
 import * as IBRShaders from "./IBRShaders";
+import {ADataTextureFloat1D} from "../anigraph/rendering/image";
 
 enum CONSTANTS {
     FOCUS_DISTANCE_CHANGE_FACTOR = 0.01,
@@ -89,7 +90,13 @@ export class IBRDataModel extends ANodeModel3D {
     // right now, neighbors in time are selected first, and then from them neighbors in space
     // are selected. So nTimeNeighbors > nSpaceNeighbors
 
-    @AObjectState focusTargetPoint!: Vec3;
+    @AObjectState focalSurfacePose!:NodeTransform3D;
+
+    /** Get set focusTargetPoint */
+    set focusTargetPoint(value){this.focalSurfacePose.position = value;}
+    get focusTargetPoint(){return this.focalSurfacePose.position;}
+
+    // @AObjectState focusTargetPoint!: Vec3;
     sceneData!: IBRSceneData;
     @AObjectState _virtualCamera!: ACamera;
     _neighborhoodViews: IBRCapturedImage[] = [];
@@ -120,8 +127,9 @@ export class IBRDataModel extends ANodeModel3D {
         await ibrScene.loadTextures();
         ibrSceneModel.setIBRScene(ibrScene);
         return ibrSceneModel;
-    }
 
+
+    }
 
     static _GetTemporalFilterModes() {
         let amodes = this.TimeFilters;
@@ -287,7 +295,7 @@ export class IBRDataModel extends ANodeModel3D {
         // if(params){
         //     this._params = params;
         // }
-        this.focusTargetPoint = V3(0, 0, 0);
+        this.focalSurfacePose = new NodeTransform3D();
         this.fixedFocalPlane = false;
         this.timeFilter = IBRDataModel.TimeFilters.Date;
         this.spaceFilter = IBRDataModel.SpaceFilters.Angle;
@@ -361,7 +369,7 @@ export class IBRDataModel extends ANodeModel3D {
         synchronous: boolean = true
     ) {
         return this.addStateKeyListener(
-            "focusTargetPoint",
+            "focalSurfacePose",
             callback,
             handle,
             synchronous
@@ -767,10 +775,11 @@ export class IBRDataModel extends ANodeModel3D {
 
     setFocusPointInImagePlane(focalPoint: Vec2) {
         let focusDistance = this.focusDistance;
-        let screenTarget = focalPoint.times(2.0).minus(V2(1.0, 1.0));
-        console.log(`[${screenTarget.x}, ${screenTarget.y}]`);
-        console.log(`FP [${focalPoint.x}, ${focalPoint.y}]`);
-        let fp4 = new Vec4(focalPoint.x, focalPoint.y, 1.0, 1.0);
+        let screenTarget = focalPoint.times(2.0);
+            // .minus(V2(1.0, 1.0));
+        // console.log(`[${screenTarget.x}, ${screenTarget.y}]`);
+        // console.log(`FP [${focalPoint.x}, ${focalPoint.y}]`);
+        let fp4 = new Vec4(screenTarget.x, screenTarget.y, 1.0, 1.0);
         let fw = this.virtualCameraPose
             .getMatrix()
             .times(this.virtualCamera.projection.getInverse().times(fp4)).Point3D;

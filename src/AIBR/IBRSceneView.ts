@@ -67,7 +67,7 @@ export class IBRSceneView extends ANodeView{
             this.model.addFocusListener(() => {
                 if (!self.model.fixedFocalPlane) {
                     self.targetSphereElement.setTransform(
-                        new NodeTransform3D(model.focusTargetPoint)
+                        model.focalSurfacePose
                     );
                     self.updateFocalPlane();
                 }

@@ -161,6 +161,7 @@ export abstract class ACameraClass<T extends TransformationInterface> extends AO
     }
 
     CreateThreeJSCamera(): Camera {
+        throw new Error("OH NOOOOOOO!!!!!")
         switch(this.projectionType){
             case ACameraClass.PROJECTION_TYPE.ORTHOGRAPHIC:
                 return new THREE.OrthographicCamera(this.lrbt[0], this.lrbt[1], this.lrbt[3], this.lrbt[2], this.zNear, this.zFar);
@@ -174,6 +175,7 @@ export abstract class ACameraClass<T extends TransformationInterface> extends AO
             default:
                 throw new Error("Unrecognized camera projection type: "+this.projectionType);
         }
+
     }
 
 
@@ -190,6 +192,7 @@ export abstract class ACameraClass<T extends TransformationInterface> extends AO
         let pinv = this.projection.getInverse();
         this.zNear = pinv.times(V4(0.0,0.0,-1.0, 1.0)).getHomogenized().z;
         this.zFar = pinv.times(V4(0.0,0.0,1.0, 1.0)).getHomogenized().z;
+        // TODO: should set lrbt
     }
 
     // setPose(pose:T){
