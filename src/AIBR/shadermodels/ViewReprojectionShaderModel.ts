@@ -8,7 +8,7 @@ import {MixTexturesShaderMaterial, MixTexturesShaderModel,MAX_TEX_PER_CALL} from
 import type {ShaderMaterialParameters} from "three/src/materials/ShaderMaterial";
 import {IBRCapturedImage} from "../IBRCapturedImage";
 import * as THREE from "three";
-import { ADataTextureFloat1D } from "src/anigraph/rendering/image";
+import { ADataTextureFloat1D, ADataTextureFloat4D } from "src/anigraph/rendering/image";
 
 const SHADER_NAME = 'viewreprojection';
 ShaderManager.LoadShader(SHADER_NAME, `ibr/${SHADER_NAME}.vert.glsl`, `ibr/${SHADER_NAME}.frag.glsl`);
@@ -79,7 +79,7 @@ export class ViewReprojectionShaderMaterial extends MixTexturesShaderMaterial{
         }
     }
 
-    setDepthMap(depthMap: ADataTextureFloat1D) {
+    setDepthMap(depthMap: ADataTextureFloat4D) {
         this.setTexture("depth", depthMap);
     }
 }

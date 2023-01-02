@@ -17,6 +17,7 @@ import {AppConfigs} from "../../AppConfigs";
 import {ASceneModelWithIBRData} from "../../../AIBR/ASceneModelWithIBRData";
 import {IBRSceneData, IBRDataModel} from "../../../AIBR";
 import * as IBRShaders from "../../../AIBR/IBRShaders"
+import { DepthGridModel } from "src/AIBR/DepthGrid/DepthGridModel";
 
 let appState = GetAppState();
 export class MainSceneRootModel extends ASceneModel implements ASceneModelWithIBRData{
@@ -62,8 +63,13 @@ export class MainSceneRootModel extends ASceneModel implements ASceneModelWithIB
         // let ibrDataModel = await IBRDataModel.CreateForScene("./ibrscenes/CGTest/");
         let ibrDataModel = await IBRDataModel.CreateForScene("./ibrscenes/TestLF/");
         this.setIBRDataModel(ibrDataModel);
-        this.addChild(this.ibr);
         this.ibr.setVirtualCamera(this.camera);
+
+        for (let i=0; i < 5; i++) {
+            const capture = this.ibrData.capturedImages[i];
+            const depthGrid = await DepthGridModel.Create(capture);
+            this.addChild(depthGrid);
+        }
     }
 
     timeUpdate(t: number, ...args:any[]) {
