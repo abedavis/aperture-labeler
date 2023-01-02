@@ -1,0 +1,394 @@
+{
+    "_ainfo": {
+        "AObjectTypeName": "COLMAPScene",
+        "cameras": [
+            {
+                "height": 3024,
+                "id": "1",
+                "model": "SIMPLE_RADIAL",
+                "params": [
+                    3040.79,
+                    2016.0,
+                    1512.0,
+                    0.00287949
+                ],
+                "py/object": "read_colmap.Camera",
+                "width": 4032
+            }
+        ],
+        "image_poses": [
+            {
+                "cameraID": "1",
+                "day": "1",
+                "ext": ".jpeg",
+                "file_directory": "",
+                "file_path": "IMG_1066.jpeg",
+                "filename": "IMG_1066.jpeg",
+                "hour": "1",
+                "image_id": "1",
+                "isotime": "1",
+                "minute": "1",
+                "month": "1",
+                "name": "IMG_1066",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.88768,
+                    -0.0295362,
+                    -0.456911,
+                    -0.0488273
+                ],
+                "second": "1",
+                "timestamp": "1",
+                "translation": [
+                    6.54244,
+                    -1.70309,
+                    1.14906
+                ],
+                "viewID": "",
+                "weekday": "1",
+                "year": "1"
+            },
+            {
+                "cameraID": "1",
+                "day": "2",
+                "ext": ".jpeg",
+                "file_directory": "",
+                "file_path": "IMG_1067.jpeg",
+                "filename": "IMG_1067.jpeg",
+                "hour": "2",
+                "image_id": "2",
+                "isotime": "2",
+                "minute": "2",
+                "month": "2",
+                "name": "IMG_1067",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.915579,
+                    -0.0163919,
+                    -0.399213,
+                    -0.0455479
+                ],
+                "second": "2",
+                "timestamp": "2",
+                "translation": [
+                    5.67232,
+                    -1.39078,
+                    0.689828
+                ],
+                "viewID": "",
+                "weekday": "2",
+                "year": "2"
+            },
+            {
+                "cameraID": "1",
+                "day": "3",
+                "ext": ".jpeg",
+                "file_directory": "",
+                "file_path": "IMG_1068.jpeg",
+                "filename": "IMG_1068.jpeg",
+                "hour": "3",
+                "image_id": "3",
+                "isotime": "3",
+                "minute": "3",
+                "month": "3",
+                "name": "IMG_1068",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.962523,
+                    -0.00182523,
+                    -0.268885,
+                    -0.0353237
+                ],
+                "second": "3",
+                "timestamp": "3",
+                "translation": [
+                    3.34152,
+                    -1.03588,
+                    -0.355244
+                ],
+                "viewID": "",
+                "weekday": "3",
+                "year": "3"
+            },
+            {
+                "cameraID": "1",
+                "day": "4",
+                "ext": ".jpeg",
+                "file_directory": "",
+                "file_path": "IMG_1069.jpeg",
+                "filename": "IMG_1069.jpeg",
+                "hour": "4",
+                "image_id": "4",
+                "isotime": "4",
+                "minute": "4",
+                "month": "4",
+                "name": "IMG_1069",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.981028,
+                    0.0100027,
+                    -0.192487,
+                    -0.0207984
+                ],
+                "second": "4",
+                "timestamp": "4",
+                "translation": [
+                    1.7129,
+                    -0.971475,
+                    -0.401888
+                ],
+                "viewID": "",
+                "weekday": "4",
+                "year": "4"
+            },
+            {
+                "cameraID": "1",
+                "day": "5",
+                "ext": ".jpeg",
+                "file_directory": "",
+                "file_path": "IMG_1070.jpeg",
+                "filename": "IMG_1070.jpeg",
+                "hour": "5",
+                "image_id": "5",
+                "isotime": "5",
+                "minute": "5",
+                "month": "5",
+                "name": "IMG_1070",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.995768,
+                    0.0158578,
+                    -0.0896367,
+                    -0.0126518
+                ],
+                "second": "5",
+                "timestamp": "5",
+                "translation": [
+                    -0.520384,
+                    -0.882938,
+                    -0.183798
+                ],
+                "viewID": "",
+                "weekday": "5",
+                "year": "5"
+            },
+            {
+                "cameraID": "1",
+                "day": "6",
+                "ext": ".jpeg",
+                "file_directory": "",
+                "file_path": "IMG_1071.jpeg",
+                "filename": "IMG_1071.jpeg",
+                "hour": "6",
+                "image_id": "6",
+                "isotime": "6",
+                "minute": "6",
+                "month": "6",
+                "name": "IMG_1071",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.999995,
+                    -0.00199287,
+                    -0.00245888,
+                    0.000864294
+                ],
+                "second": "6",
+                "timestamp": "6",
+                "translation": [
+                    -1.87133,
+                    -0.916249,
+                    0.457236
+                ],
+                "viewID": "",
+                "weekday": "6",
+                "year": "6"
+            },
+            {
+                "cameraID": "1",
+                "day": "7",
+                "ext": ".jpeg",
+                "file_directory": "",
+                "file_path": "IMG_1072.jpeg",
+                "filename": "IMG_1072.jpeg",
+                "hour": "7",
+                "image_id": "7",
+                "isotime": "7",
+                "minute": "7",
+                "month": "7",
+                "name": "IMG_1072",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.999496,
+                    -0.00807374,
+                    0.0281404,
+                    0.0122977
+                ],
+                "second": "7",
+                "timestamp": "7",
+                "translation": [
+                    -3.62261,
+                    -0.822873,
+                    0.897764
+                ],
+                "viewID": "",
+                "weekday": "7",
+                "year": "7"
+            },
+            {
+                "cameraID": "1",
+                "day": "8",
+                "ext": ".jpeg",
+                "file_directory": "",
+                "file_path": "IMG_1073.jpeg",
+                "filename": "IMG_1073.jpeg",
+                "hour": "8",
+                "image_id": "8",
+                "isotime": "8",
+                "minute": "8",
+                "month": "8",
+                "name": "IMG_1073",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.999313,
+                    0.00963501,
+                    0.0357544,
+                    -0.00170026
+                ],
+                "second": "8",
+                "timestamp": "8",
+                "translation": [
+                    -3.80431,
+                    0.0738208,
+                    1.24001
+                ],
+                "viewID": "",
+                "weekday": "8",
+                "year": "8"
+            },
+            {
+                "cameraID": "1",
+                "day": "9",
+                "ext": ".jpeg",
+                "file_directory": "",
+                "file_path": "IMG_1074.jpeg",
+                "filename": "IMG_1074.jpeg",
+                "hour": "9",
+                "image_id": "9",
+                "isotime": "9",
+                "minute": "9",
+                "month": "9",
+                "name": "IMG_1074",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.997363,
+                    0.065661,
+                    0.0306866,
+                    -0.00383416
+                ],
+                "second": "9",
+                "timestamp": "9",
+                "translation": [
+                    -3.81402,
+                    1.63363,
+                    1.51528
+                ],
+                "viewID": "",
+                "weekday": "9",
+                "year": "9"
+            },
+            {
+                "cameraID": "1",
+                "day": "10",
+                "ext": ".jpeg",
+                "file_directory": "",
+                "file_path": "IMG_1075.jpeg",
+                "filename": "IMG_1075.jpeg",
+                "hour": "10",
+                "image_id": "10",
+                "isotime": "10",
+                "minute": "10",
+                "month": "10",
+                "name": "IMG_1075",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.990119,
+                    0.139881,
+                    0.00892376,
+                    -0.0042204
+                ],
+                "second": "10",
+                "timestamp": "10",
+                "translation": [
+                    -3.63175,
+                    2.99073,
+                    1.5544
+                ],
+                "viewID": "",
+                "weekday": "10",
+                "year": "10"
+            },
+            {
+                "cameraID": "1",
+                "day": "11",
+                "ext": ".jpeg",
+                "file_directory": "",
+                "file_path": "IMG_1076.jpeg",
+                "filename": "IMG_1076.jpeg",
+                "hour": "11",
+                "image_id": "11",
+                "isotime": "11",
+                "minute": "11",
+                "month": "11",
+                "name": "IMG_1076",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.971997,
+                    0.232209,
+                    -0.0225053,
+                    -0.0281677
+                ],
+                "second": "11",
+                "timestamp": "11",
+                "translation": [
+                    -3.4834,
+                    4.31418,
+                    1.24194
+                ],
+                "viewID": "",
+                "weekday": "11",
+                "year": "11"
+            },
+            {
+                "cameraID": "1",
+                "day": "12",
+                "ext": ".jpeg",
+                "file_directory": "",
+                "file_path": "IMG_1077.jpeg",
+                "filename": "IMG_1077.jpeg",
+                "hour": "12",
+                "image_id": "12",
+                "isotime": "12",
+                "minute": "12",
+                "month": "12",
+                "name": "IMG_1077",
+                "py/object": "read_colmap.ImagePose",
+                "rotation": [
+                    0.962507,
+                    -0.0102966,
+                    -0.270645,
+                    -0.0150338
+                ],
+                "second": "12",
+                "timestamp": "12",
+                "translation": [
+                    1.83671,
+                    -1.16101,
+                    14.0809
+                ],
+                "viewID": "",
+                "weekday": "12",
+                "year": "12"
+            }
+        ]
+    }
+}

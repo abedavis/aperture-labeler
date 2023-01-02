@@ -1,4 +1,4 @@
-import {AObject, AObjectState, ATexture, Mat4, NodeTransform3D, Quaternion, V3, Vec3} from "../anigraph";
+import {AObject, AObjectState, ATexture, Mat4, NodeTransform3D, Quaternion, V3, V4, Vec3} from "../anigraph";
 import {IBRCamera} from "./IBRCamera";
 import {IBRTimeStamp} from "./IBRTimeStamp";
 import * as d3 from "d3";
@@ -142,10 +142,26 @@ export class IBRCapturedImage extends AObject {
     static FromDictCOLMAP(d: { [name: string]: any }) {
         let c = new IBRCapturedImage();
         c.captureTime = IBRTimeStamp.FromDictCOLMAP(d);
+
+
+        /**
+         * The reconstructed pose of an image is specified as the projection from world to the camera coordinate system of an image using a quaternion (QW, QX, QY, QZ) and a translation vector (TX, TY, TZ). The quaternion is defined using the Hamilton convention, which is, for example, also used by the Eigen library. The coordinates of the projection/camera center are given by -R^t * T, where R^t is the inverse/transpose of the 3x3 rotation matrix composed from the quaternion and T is the translation vector. The local camera coordinatxis to the bottome system of an image is defined in a way that the X axis points to the right, the Y a, and the Z axis to the front as seen from the image.
+         */
+
+        // let adjustMat = new Mat4(
+        //     1.0, 0.0, 0.0, 0.0,
+        //     0.0, -1.0, 0.0, 0.0,
+        //     0.0, 0.0, -1.0, 0.0,
+        //     0.0, 0.0, 0.0, 1.0
+        // )
+
         let q = Quaternion.FromWXYZ(d["rotation"]);
         let T = V3(d["translation"]);
+        let pose = new NodeTransform3D(T, q);
+        let rcorrect = Quaternion.RotationX(Math.PI);
+        c.pose = new NodeTransform3D(rcorrect.appliedTo(pose.position), rcorrect.times(pose.rotation)).getInverse();
 
-        c.pose = new NodeTransform3D(T.times(-1), q.getInverse());
+
 
 
         c.fileName = d["filename"];
