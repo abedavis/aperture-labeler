@@ -1,4 +1,4 @@
-import {AObject, AObjectState, ATexture, Mat4, NodeTransform3D, Quaternion, V3, V4, Vec3} from "../anigraph";
+import {AObject, AObjectState, ATexture, Mat3, Mat4, NodeTransform3D, Quaternion, V3, V4, Vec3} from "../anigraph";
 import {IBRCamera} from "./IBRCamera";
 import {IBRTimeStamp} from "./IBRTimeStamp";
 import * as d3 from "d3";
@@ -155,14 +155,53 @@ export class IBRCapturedImage extends AObject {
         //     0.0, 0.0, 0.0, 1.0
         // )
 
-        let q = Quaternion.FromWXYZ(d["rotation"]);
-        let T = V3(d["translation"]);
-        let pose = new NodeTransform3D(T, q);
-        let rcorrect = Quaternion.RotationX(Math.PI);
-        c.pose = new NodeTransform3D(rcorrect.appliedTo(pose.position), rcorrect.times(pose.rotation)).getInverse();
+        let qvec = d["rotation"];
+        let tvec = V3(d["translation"]);
+        //let rcorrect = Quaternion.RotationX(Math.PI);
 
+        const rot = new Mat3(
+            1 - 2 * qvec[2]**2 - 2 * qvec[3]**2,
+            2 * qvec[1] * qvec[2] - 2 * qvec[0] * qvec[3],
+            2 * qvec[3] * qvec[1] + 2 * qvec[0] * qvec[2],
+            2 * qvec[1] * qvec[2] + 2 * qvec[0] * qvec[3],
+            1 - 2 * qvec[1]**2 - 2 * qvec[3]**2,
+            2 * qvec[2] * qvec[3] - 2 * qvec[0] * qvec[1],
+            2 * qvec[3] * qvec[1] - 2 * qvec[0] * qvec[2],
+            2 * qvec[2] * qvec[3] + 2 * qvec[0] * qvec[1],
+            1 - 2 * qvec[1]**2 - 2 * qvec[2]**2,
+        );
+        // const trans = new Mat4(
+        //     1, 0, 0, tvec.x,
+        //     0, 1, 0, tvec.y,
+        //     0, 0, 1, tvec.z,
+        //     0, 0, 0, 1
+        // )
 
+        const cameraPosition = rot.getTranspose().times(-1).times(tvec);
+        const worldToCamera = Quaternion.FromWXYZ(qvec);
+        const colmapToGL = Quaternion.RotationX(Math.PI);
+        const quat = worldToCamera.times(colmapToGL).getInverse();
+        c.pose = new NodeTransform3D(cameraPosition, quat);
+        c.pose = new NodeTransform3D(tvec, Quaternion.FromWXYZ(qvec));
 
+        // let pose = new Mat4(
+        //     1 - 2 * qvec[2]**2 - 2 * qvec[3]**2,
+        //     2 * qvec[1] * qvec[2] - 2 * qvec[0] * qvec[3],
+        //     2 * qvec[3] * qvec[1] + 2 * qvec[0] * qvec[2],
+        //     tvec.x,
+        //     2 * qvec[1] * qvec[2] + 2 * qvec[0] * qvec[3],
+        //     1 - 2 * qvec[1]**2 - 2 * qvec[3]**2,
+        //     2 * qvec[2] * qvec[3] - 2 * qvec[0] * qvec[1],
+        //     -tvec.y,
+        //     2 * qvec[3] * qvec[1] - 2 * qvec[0] * qvec[2],
+        //     2 * qvec[2] * qvec[3] + 2 * qvec[0] * qvec[1],
+        //     1 - 2 * qvec[1]**2 - 2 * qvec[2]**2,
+        //     -tvec.z,
+        //     0, 0, 0, 1
+        // );
+        // const rotation = Mat4.FromEulerAngles(Math.PI, 0, 0);
+        // //pose = rotation.times(pose)
+        // c.pose = NodeTransform3D.FromPoseMatrix(pose.invert());
 
         c.fileName = d["filename"];
         if (d["viewID"] !== undefined) {
