@@ -30,7 +30,6 @@ uniform sampler2D tex15Map;
 varying vec2 vUv;
 
 varying vec4 vPosition;
-varying mat4 mProj;
 
 
 vec4 sampleTexValue(int index, vec2 uv){
@@ -160,7 +159,6 @@ void main() {
     for(int tx=0;tx<nTextures;tx++){
         oweights = oweights+weights[tx];
         vec4 capturedCoord = projections[tx]*poses[tx]*worldCoordinates;
-        //vec4 capturedCoord = mProj*poses[tx]*worldCoordinates;
         vec2 rpcoords = capturedCoord.xy/capturedCoord.w;
         rpcoords = (rpcoords+vec2(1.0,1.0))*0.5;
         oval = oval + sampleWithBoundary(rpcoords, tx);

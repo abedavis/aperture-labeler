@@ -148,16 +148,8 @@ export class IBRCapturedImage extends AObject {
          * The reconstructed pose of an image is specified as the projection from world to the camera coordinate system of an image using a quaternion (QW, QX, QY, QZ) and a translation vector (TX, TY, TZ). The quaternion is defined using the Hamilton convention, which is, for example, also used by the Eigen library. The coordinates of the projection/camera center are given by -R^t * T, where R^t is the inverse/transpose of the 3x3 rotation matrix composed from the quaternion and T is the translation vector. The local camera coordinatxis to the bottome system of an image is defined in a way that the X axis points to the right, the Y a, and the Z axis to the front as seen from the image.
          */
 
-        // let adjustMat = new Mat4(
-        //     1.0, 0.0, 0.0, 0.0,
-        //     0.0, -1.0, 0.0, 0.0,
-        //     0.0, 0.0, -1.0, 0.0,
-        //     0.0, 0.0, 0.0, 1.0
-        // )
-
         let qvec = d["rotation"];
         let tvec = V3(d["translation"]);
-        //let rcorrect = Quaternion.RotationX(Math.PI);
 
         const rot = new Mat3(
             1 - 2 * qvec[2]**2 - 2 * qvec[3]**2,
@@ -170,38 +162,15 @@ export class IBRCapturedImage extends AObject {
             2 * qvec[2] * qvec[3] + 2 * qvec[0] * qvec[1],
             1 - 2 * qvec[1]**2 - 2 * qvec[2]**2,
         );
-        // const trans = new Mat4(
-        //     1, 0, 0, tvec.x,
-        //     0, 1, 0, tvec.y,
-        //     0, 0, 1, tvec.z,
-        //     0, 0, 0, 1
-        // )
-
+        const negateYZ = new Mat3(
+            1.0, 0.0, 0.0, 
+            0.0, -1.0, 0.0, 
+            0.0, 0.0, -1.0, 
+        )
+        const quat = Quaternion.FromMatrix(negateYZ.times(rot).getTranspose());
         const cameraPosition = rot.getTranspose().times(-1).times(tvec);
-        const worldToCamera = Quaternion.FromWXYZ(qvec);
-        const colmapToGL = Quaternion.RotationX(Math.PI);
-        const quat = worldToCamera.times(colmapToGL).getInverse();
         c.pose = new NodeTransform3D(cameraPosition, quat);
-        c.pose = new NodeTransform3D(tvec, Quaternion.FromWXYZ(qvec));
 
-        // let pose = new Mat4(
-        //     1 - 2 * qvec[2]**2 - 2 * qvec[3]**2,
-        //     2 * qvec[1] * qvec[2] - 2 * qvec[0] * qvec[3],
-        //     2 * qvec[3] * qvec[1] + 2 * qvec[0] * qvec[2],
-        //     tvec.x,
-        //     2 * qvec[1] * qvec[2] + 2 * qvec[0] * qvec[3],
-        //     1 - 2 * qvec[1]**2 - 2 * qvec[3]**2,
-        //     2 * qvec[2] * qvec[3] - 2 * qvec[0] * qvec[1],
-        //     -tvec.y,
-        //     2 * qvec[3] * qvec[1] - 2 * qvec[0] * qvec[2],
-        //     2 * qvec[2] * qvec[3] + 2 * qvec[0] * qvec[1],
-        //     1 - 2 * qvec[1]**2 - 2 * qvec[2]**2,
-        //     -tvec.z,
-        //     0, 0, 0, 1
-        // );
-        // const rotation = Mat4.FromEulerAngles(Math.PI, 0, 0);
-        // //pose = rotation.times(pose)
-        // c.pose = NodeTransform3D.FromPoseMatrix(pose.invert());
 
         c.fileName = d["filename"];
         if (d["viewID"] !== undefined) {

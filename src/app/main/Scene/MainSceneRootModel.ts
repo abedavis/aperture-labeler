@@ -59,10 +59,10 @@ export class MainSceneRootModel extends ASceneModel implements ASceneModelWithIB
 
     async initScene() {
         // let ibrDataModel = await IBRDataModel.CreateForScene("./ibrscenes/TreeNewold/");
-        let ibrDataModel = await IBRDataModel.CreateForScene("./ibrscenes/CGTest/");
+        // let ibrDataModel = await IBRDataModel.CreateForScene("./ibrscenes/CGTest/");
         // let ibrDataModel = await IBRDataModel.CreateForScene("./ibrscenes/TestLF/");
         // let ibrDataModel = await IBRDataModel.CreateForScene("./ibrscenes/testscene1/images/");
-        // let ibrDataModel = await IBRDataModel.CreateForScene("./ibrscenes/testscene2/images/");
+        let ibrDataModel = await IBRDataModel.CreateForScene("./ibrscenes/testscene2/images/");
         // let ibrDataModel = await IBRDataModel.CreateForScene("./ibrscenes/BalconyTest/");
         this.setIBRDataModel(ibrDataModel);
         this.addChild(this.ibr);
