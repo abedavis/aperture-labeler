@@ -6,7 +6,7 @@
 
 
 import {
-    AGLContext, ASceneController, Color,
+    AGLContext, AGraphicElement, ASceneController, ASceneElement, AShaderMaterial, AShaderModel, Color, Mat4, V3,
 } from "../../../anigraph";
 import {ATriangleMeshModel, ATriangleMeshView} from "../../../anigraph/scene/nodes";
 import {ADebugInteractionMode} from "../../../anigraph/scene/interactionmodes/ADebugInteractionMode";
@@ -19,8 +19,12 @@ import {IBRViewerInteractionMode} from "../../../AIBR/IBRViewerInteractionMode";
 import { PaintInteractionMode } from "src/AIBR/DepthPainter/PaintInteractionMode";
 import { DepthGridModel } from "src/AIBR/DepthGrid/DepthGridModel";
 import { DepthGridView } from "src/AIBR/DepthGrid/DepthGridView";
+import { ARenderTarget } from "src/anigraph/rendering/multipass/ARenderTarget";
+import { DepthGridShaderMaterial, DepthGridShaderModel } from "src/AIBR/shadermodels/DepthGridShaderModel";
+import { PostProcessingCamera } from "./PostProcessingCamera";
 
-
+const RenderTargetWidth:number=512;
+const RenderTargetHeight:number=512;
 
 export class MainSceneController extends ASceneController implements ASceneControllerWithIBR{
     get model():MainSceneRootModel{
@@ -36,6 +40,8 @@ export class MainSceneController extends ASceneController implements ASceneContr
 
     async initScene(): Promise<void> {
         this.view.setBackgroundColor(Color.FromString("#000000"));
+        await this.initPostProcessingEffects();
+        // console.log(this.renderer)
     }
 
     initInteractions() {
@@ -52,22 +58,73 @@ export class MainSceneController extends ASceneController implements ASceneContr
     }
 
     onAnimationFrameCallback(context:AGLContext) {
-        // let's update the model
-        let time = this.time;
+        const time = this.time;
         this.model.timeUpdate(time);
-
-        /**
-         * And the interaction mode... This is important for things like camera motion filtering.
-         */
         this.interactionMode.timeUpdate(time)
 
-        // clear the rendering context
+        this.setRenderTarget(this.depthGridRenderTarget);
         context.renderer.clear();
-        // this.renderer.clear(false, true);
-
-        // render the scene view
         context.renderer.render(this.view.threejs, this._threeCamera);
+
+        this.setRenderTarget(this.accRenderTarget);
+        this.fullScreenQuad.setMaterial(this.accMaterial);
+        context.renderer.clear();
+        context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
+
+        this.setRenderTarget();
+        this.fullScreenQuad.setMaterial(this.displayMaterial);
+        context.renderer.clear();
+        context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
     }
+
+    depthGridRenderTarget!: ARenderTarget;
+    accRenderTarget!: ARenderTarget;
+    fullScreenQuad!: AGraphicElement;
+    fullScreenScene!: ASceneElement;
+    fullScreenCamera!: PostProcessingCamera;
+    accMaterial!: AShaderMaterial;
+    displayMaterial!: AShaderMaterial;
+
+    async initPostProcessingEffects(){
+        function newRenderTarget(){
+            let rt = new ARenderTarget(RenderTargetWidth, RenderTargetHeight);
+            rt.targetTexture.setMinFilter(THREE.LinearMipmapLinearFilter);
+            rt.targetTexture.setMagFilter(THREE.LinearFilter);
+            return rt;
+        }
+        this.depthGridRenderTarget = newRenderTarget();
+        this.accRenderTarget = newRenderTarget();
+
+        const accShaderModel = await AShaderModel.CreateModel("acctexture");
+        this.accMaterial = accShaderModel.CreateMaterial();
+        this.accMaterial.setTexture('input', this.depthGridRenderTarget.targetTexture);
+        this.accMaterial.setBlendingMode(THREE.AdditiveBlending);
+        this.accMaterial.threejs.transparent = true;
+
+        const displayShaderModel = await AShaderModel.CreateModel("displaytexture");
+        this.displayMaterial = displayShaderModel.CreateMaterial();
+        this.displayMaterial.setTexture('input', this.accRenderTarget.targetTexture);
+        this.displayMaterial.setTexture('input2', this.depthGridRenderTarget.targetTexture);
+
+        this.fullScreenQuad = AGraphicElement.CreateSimpleQuad(this.displayMaterial);
+        this.fullScreenQuad.setTransform(Mat4.Scale3D(V3(2.0,2.0,1.0)));
+
+        this.fullScreenScene = new ASceneElement();
+        this.fullScreenScene.add(this.fullScreenQuad);
+        this.fullScreenScene.threejs.background = new THREE.Color(0, 0, 0);
+        this.fullScreenCamera = new PostProcessingCamera();
+
+        // const self = this;
+        // appState.addSliderIfMissing("sliderValue", 0.1,0,1,0.01);
+        // this.subscribeToAppState("sliderValue", (v:number)=>{
+        //     self.postProcessingMaterial.setUniform("sliderValue", v);
+        // });
+        // appState.addSliderIfMissing("otherSliderValue", 1.0,0,2,0.01);
+        // this.subscribeToAppState("otherSliderValue", (v:number)=>{
+        //     self.postProcessingMaterial.setUniform("otherSliderValue", v);
+        // });
+    }
+
 
 }
 

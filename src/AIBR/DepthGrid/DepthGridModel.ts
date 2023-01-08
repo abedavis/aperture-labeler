@@ -1,8 +1,10 @@
 import { text } from "d3";
 import { ANodeModel3D, ASerializable, ATexture, NodeTransform3D } from "src/anigraph";
-import { ADataTextureFloat4D } from "src/anigraph/rendering/image";
+import { ADataTextureFloat1D, ADataTextureFloat4D } from "src/anigraph/rendering/image";
+import { Texture } from "three";
 import { IBRCapturedImage } from "../IBRCapturedImage";
 import { DepthGridShaderModel } from "../shadermodels/DepthGridShaderModel";
+import { TIFFLoader } from "./TIFFLoader";
 
 @ASerializable("IBRSceneModel")
 export class DepthGridModel extends ANodeModel3D {
@@ -22,7 +24,14 @@ export class DepthGridModel extends ANodeModel3D {
     }
 
     async registerDepthMap(path: string) {
-        this.depthMap = await ATexture.LoadAsync(path);
+        const textureExt = path.split('.').pop();
+        if (textureExt == "tiff" || textureExt == "tif") {
+            const loader = new TIFFLoader();
+            const threeTexture = await loader.loadAsync(path);
+            this.depthMap = ADataTextureFloat1D.Create(threeTexture.image.width, threeTexture.image.height, loader.data);
+        } else {
+            this.depthMap = await ATexture.LoadAsync(path);
+        }
         this.depthMap.setWrapToClamp();
     }
 
@@ -32,7 +41,7 @@ export class DepthGridModel extends ANodeModel3D {
         }
 
         const grid = new this(capturedImage);
-        const depthMapPath = `ibrscenes/TestLF/depth_maps/${capturedImage.filePath}.geometric.jpeg`;
+        const depthMapPath = `ibrscenes/TestLF/depth_maps/${capturedImage.filePath}.geometric.tiff`;
         await grid.registerDepthMap(depthMapPath);
 
         grid.setMaterial(

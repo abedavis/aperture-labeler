@@ -11,17 +11,17 @@ import {AThreeJSContextComponent, ControlPanel} from "../../anigraph";
 import React, {useState} from "react";
 
 
-import {MainSceneRootModel} from "./Scene/MainSceneRootModel";
-import {MainSceneController} from "./Scene/MainSceneController";
-const SceneModel = new MainSceneRootModel();
-SceneModel.confirmInitialized();
-const SceneController = new MainSceneController(SceneModel);
-
-// import {MainSceneRootModel} from "./AnotherScene/MainSceneRootModel";
-// import {MainSceneController} from "./AnotherScene/MainSceneController";
+// import {MainSceneRootModel} from "./Scene/MainSceneRootModel";
+// import {MainSceneController} from "./Scene/MainSceneController";
 // const SceneModel = new MainSceneRootModel();
 // SceneModel.confirmInitialized();
 // const SceneController = new MainSceneController(SceneModel);
+
+import {MainSceneRootModel} from "./AnotherScene/MainSceneRootModel";
+import {MainSceneController} from "./AnotherScene/MainSceneController";
+const SceneModel = new MainSceneRootModel();
+SceneModel.confirmInitialized();
+const SceneController = new MainSceneController(SceneModel);
 
 /**
  * Comment out the code above and uncomment the code below to run the Example1Scene

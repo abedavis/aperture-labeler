@@ -56,8 +56,6 @@ export class MainSceneRootModel extends ASceneModel implements ASceneModelWithIB
         )
     }
 
-
-
     async initScene() {
         // let ibrDataModel = await IBRDataModel.CreateForScene("./ibrscenes/TreeNewold/");
         // let ibrDataModel = await IBRDataModel.CreateForScene("./ibrscenes/CGTest/");
@@ -65,11 +63,23 @@ export class MainSceneRootModel extends ASceneModel implements ASceneModelWithIB
         this.setIBRDataModel(ibrDataModel);
         this.ibr.setVirtualCamera(this.camera);
 
-        for (let i=0; i < 5; i++) {
-            const capture = this.ibrData.capturedImages[i];
-            const depthGrid = await DepthGridModel.Create(capture);
-            this.addChild(depthGrid);
-        }
+        // for (let i=0; i < 2; i++) {
+        //     const capture = this.ibrData.capturedImages[i];
+        //     const depthGrid = await DepthGridModel.Create(capture);
+        //     // depthGrid.transform.setPosition(new Vec3(i*100, 0, 0));
+        //     this.addChild(depthGrid);
+        // }
+
+        const capture = this.ibrData.capturedImages[1];
+        const depthGrid = await DepthGridModel.Create(capture);
+        this.addChild(depthGrid);
+
+        this.cameraModel.setPose(capture.pose);
+
+        // const capture2 = this.ibrData.capturedImages[20];
+        // const depthGrid2 = await DepthGridModel.Create(capture2);
+        // this.addChild(depthGrid2);
+
     }
 
     timeUpdate(t: number, ...args:any[]) {

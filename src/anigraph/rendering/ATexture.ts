@@ -1,4 +1,5 @@
 import * as THREE from "three";
+// import { TIFFLoader } from 'three/examples/jsm/loaders/TIFFLoader.js';
 import {AObject, AObjectState} from "../base";
 import {ASerializable} from "../base";
 import type {GenericDict} from "../basictypes";

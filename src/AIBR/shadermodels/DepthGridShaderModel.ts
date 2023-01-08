@@ -44,6 +44,8 @@ export class DepthGridShaderModel extends AShaderModel {
     }
     CreateMaterial(image: ATexture, depthMap: ATexture, captureImageProjectionMatrix: Mat4){
         const mat = super.CreateMaterial();
+        mat.setBlendingMode(THREE.AdditiveBlending);
+        mat.threejs.transparent = true;
         mat.setTexture("input", image);
         mat.setTexture("depth", depthMap);
         mat.setUniform("captureCameraProjMat", captureImageProjectionMatrix)

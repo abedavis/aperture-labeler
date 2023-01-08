@@ -4,7 +4,7 @@ import {AAppState, AObjectState, GetAppState} from "../../base";
 import {AShaderModel} from "./AShaderModel";
 import type {ShaderUniformDict} from "./AShaderModel";
 import * as THREE from "three";
-import {Color, V2, Vec2, Vec3, Vec4} from "../../math";
+import {Color, Mat4, V2, Vec2, Vec3, Vec4} from "../../math";
 import {TextureKeyForName, TextureProvidedKeyForName, TextureSizeKeyForName} from "../../defines";
 
 export class AShaderMaterial extends AMaterial{
@@ -116,6 +116,11 @@ export class AShaderMaterial extends AMaterial{
 
         if(value instanceof Color){
             this.setUniform(name, value.Vec4, 'vec4');
+            return;
+        }
+
+        if(value instanceof Mat4){
+            this.setUniform(name, value.asThreeJS, 'mat4');
             return;
         }
         // if(Array.isArray(value) && !isNaN(value[0]) && !type){
