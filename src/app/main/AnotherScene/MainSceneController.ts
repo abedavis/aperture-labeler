@@ -62,19 +62,19 @@ export class MainSceneController extends ASceneController implements ASceneContr
         this.model.timeUpdate(time);
         this.interactionMode.timeUpdate(time)
 
-        this.setRenderTarget(this.depthGridRenderTarget);
+        // this.setRenderTarget(this.depthGridRenderTarget);
         context.renderer.clear();
         context.renderer.render(this.view.threejs, this._threeCamera);
 
-        this.setRenderTarget(this.accRenderTarget);
-        this.fullScreenQuad.setMaterial(this.accMaterial);
-        context.renderer.clear();
-        context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
+        // this.setRenderTarget(this.accRenderTarget);
+        // this.fullScreenQuad.setMaterial(this.accMaterial);
+        // context.renderer.clear();
+        // context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
 
-        this.setRenderTarget();
-        this.fullScreenQuad.setMaterial(this.displayMaterial);
-        context.renderer.clear();
-        context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
+        // this.setRenderTarget();
+        // this.fullScreenQuad.setMaterial(this.displayMaterial);
+        // context.renderer.clear();
+        // context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
     }
 
     depthGridRenderTarget!: ARenderTarget;

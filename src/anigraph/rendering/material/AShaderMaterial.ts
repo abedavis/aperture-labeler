@@ -120,7 +120,7 @@ export class AShaderMaterial extends AMaterial{
         }
 
         if(value instanceof Mat4){
-            this.setUniform(name, value.asThreeJS, 'mat4');
+            this.setUniform(name, value.asThreeJS(), 'mat4');
             return;
         }
         // if(Array.isArray(value) && !isNaN(value[0]) && !type){
