@@ -71,6 +71,7 @@ export class MainSceneController extends ASceneController implements ASceneContr
         context.renderer.clear();
         context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
 
+
         this.setRenderTarget();
         this.fullScreenQuad.setMaterial(this.displayMaterial);
         context.renderer.clear();
@@ -100,6 +101,13 @@ export class MainSceneController extends ASceneController implements ASceneContr
         this.accMaterial.setTexture('input', this.depthGridRenderTarget.targetTexture);
         this.accMaterial.setBlendingMode(THREE.AdditiveBlending);
         this.accMaterial.threejs.transparent = true;
+        this.accMaterial.threejs.blending=THREE.CustomBlending;
+        this.accMaterial.threejs.blendEquation=THREE.AddEquation;
+        this.accMaterial.threejs.blendSrc=THREE.OneFactor;
+        this.accMaterial.threejs.blendDst=THREE.OneFactor;
+        this.accMaterial.threejs.depthTest=false;
+        this.accMaterial.threejs.depthWrite=false;
+        this.accMaterial.threejs.needsUpdate = true;
 
         const displayShaderModel = await AShaderModel.CreateModel("displaytexture");
         this.displayMaterial = displayShaderModel.CreateMaterial();
