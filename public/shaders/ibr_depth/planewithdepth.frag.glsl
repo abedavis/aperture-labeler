@@ -2,12 +2,9 @@ precision highp float;
 precision highp int;
 
 varying vec2 vUv;
-varying vec4 vPosition;
-varying vec4 mPosition;
 
-varying float depth;
-uniform sampler2D depthMap;
 uniform sampler2D inputMap;
+uniform bool isOccupancy;
 
 // vec2 orientedDeviceTexCoords(vec2 texCoords, int orientation){
 //     switch(orientation) {
@@ -49,8 +46,13 @@ uniform sampler2D inputMap;
 // }
 
 void main() {
-    gl_FragColor = texture(inputMap, vUv);
-    // gl_FragColor.a = 1.0;
+    if (isOccupancy) {
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    } else {
+        gl_FragColor = texture(inputMap, vUv);
+    }
+    
+
     // gl_FragColor = vec4(vec3(depth), 1.0);
     // return;
     // vec3 N = normalize( cross( dFdx( mPosition.xyz ), dFdy( mPosition.xyz ) ) );

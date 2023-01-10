@@ -15,12 +15,14 @@ import {
 import { ATexture} from "../../../anigraph";
 import {AppConfigs} from "../../AppConfigs";
 import {ASceneModelWithIBRData} from "../../../AIBR/ASceneModelWithIBRData";
-import {IBRSceneData, IBRDataModel} from "../../../AIBR";
+import {IBRSceneData, IBRDataModel, IBRCapturedImage} from "../../../AIBR";
 import * as IBRShaders from "../../../AIBR/IBRShaders"
 import { DepthGridModel } from "src/AIBR/DepthGrid/DepthGridModel";
 
 let appState = GetAppState();
-export class MainSceneRootModel extends ASceneModel implements ASceneModelWithIBRData{
+export class MainSceneRootModel extends ASceneModel implements ASceneModelWithIBRData {
+    depthGrids: DepthGridModel[] = [];
+
     _ibrDataModel!:IBRDataModel;
     get ibrData():IBRSceneData{
         return this.ibr.sceneData;
@@ -63,23 +65,17 @@ export class MainSceneRootModel extends ASceneModel implements ASceneModelWithIB
         this.setIBRDataModel(ibrDataModel);
         this.ibr.setVirtualCamera(this.camera);
 
-        // for (let i=0; i < 2; i++) {
-        //     const capture = this.ibrData.capturedImages[i];
-        //     const depthGrid = await DepthGridModel.Create(capture);
-        //     // depthGrid.transform.setPosition(new Vec3(i*100, 0, 0));
-        //     this.addChild(depthGrid);
-        // }
 
-        const capture = this.ibrData.capturedImages[1];
-        const depthGrid = await DepthGridModel.Create(capture);
-        this.addChild(depthGrid);
 
-        this.cameraModel.setPose(capture.pose);
+        this.depthGrids = []
+        this.ibrData.capturedImages.forEach(async (capture: IBRCapturedImage) => {
+            const depthGrid = await DepthGridModel.Create(capture);
+            depthGrid.visible = false;
+            this.addChild(depthGrid);
+            this.depthGrids.push(depthGrid);
+        })
 
-        // const capture2 = this.ibrData.capturedImages[20];
-        // const depthGrid2 = await DepthGridModel.Create(capture2);
-        // this.addChild(depthGrid2);
-
+        this.cameraModel.setPose(this.ibrData.capturedImages[0].pose);
     }
 
     timeUpdate(t: number, ...args:any[]) {
@@ -95,6 +91,22 @@ export class MainSceneRootModel extends ASceneModel implements ASceneModelWithIB
 
     getCoordinatesForCursorEvent(event: AInteractionEvent){
         return event.ndcCursor??new Vec2();
+    }
+
+    setVisibleForDepthGridAt(idx: number) {
+        this.depthGrids.forEach((grid: DepthGridModel, i: number) => {
+            if (i === idx) {
+                grid.visible = true;
+            } else {
+                grid.visible = false;
+            }
+        })
+    }
+
+    setOccupancyRendering(val: boolean) {
+        this.depthGrids.forEach((grid: DepthGridModel) => {
+            grid.material.setUniform("isOccupancy", val);
+        })
     }
 }
 

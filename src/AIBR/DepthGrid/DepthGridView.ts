@@ -28,10 +28,12 @@ export class DepthGridView extends ANodeView {
         // frustEl.setTransform(v.pose);
         // this._guiCameraFrustaGroup.add(frustEl);
         this.addGraphic(frustEl);
-        //this.update();
+
+        this.subscribe(this.model.addEventListener("visibilityChanged", () => { this.update() }));
+        this.update();
     }
+
     update(): void {
-        // WHY DOESN't IT WORK???
-        //this.setTransform(this.model.transform);
+        this.threejs.visible = this.model.visible;
     }
 }

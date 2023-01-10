@@ -8,8 +8,16 @@ import { TIFFLoader } from "./TIFFLoader";
 @ASerializable("IBRSceneModel")
 export class DepthGridModel extends ANodeModel3D {
     capturedImage: IBRCapturedImage
-    // depthMap!: ADataTextureFloat4D
     depthMap!: ATexture
+
+    set visible(value: boolean) {
+        this._visible = value;
+        this.signalEvent("visibilityChanged");
+    }
+
+    get visible() {
+        return this._visible;
+    }
 
     constructor(capturedImage: IBRCapturedImage) {
         super();
