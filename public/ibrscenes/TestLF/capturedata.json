@@ -1,0 +1,859 @@
+{
+    "_ainfo": {
+        "AObjectTypeName": "COLMAPScene",
+        "cameras": [
+            {
+                "height": 2000,
+                "id": "1",
+                "model": "PINHOLE",
+                "params": [
+                    1661.0311614730879,
+                    1660.5607476635514,
+                    750.0,
+                    1000.0
+                ],
+                "py/object": "__main__.Camera",
+                "width": 1500
+            }
+        ],
+        "image_poses": [
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-41-11.jpeg",
+                "filename": "2022-12-19-17-41-11.jpeg",
+                "hour": 17,
+                "image_id": "27",
+                "isotime": "2022-12-19T17:41:11",
+                "minute": 41,
+                "month": 12,
+                "name": "2022-12-19-17-41-11",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9978025707451064,
+                    -0.061133573700322644,
+                    -0.024449189481953106,
+                    0.007413036810909873
+                ],
+                "second": 11,
+                "timestamp": 1671489671.0,
+                "translation": [
+                    0.206303,
+                    2.58863,
+                    -1.06556
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-41-10.jpeg",
+                "filename": "2022-12-19-17-41-10.jpeg",
+                "hour": 17,
+                "image_id": "26",
+                "isotime": "2022-12-19T17:41:10",
+                "minute": 41,
+                "month": 12,
+                "name": "2022-12-19-17-41-10",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9982656567333268,
+                    -0.05425598134337278,
+                    -0.022022292427347365,
+                    0.006081587908766634
+                ],
+                "second": 10,
+                "timestamp": 1671489670.0,
+                "translation": [
+                    0.0405144,
+                    0.652144,
+                    -0.888418
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-41-09.jpeg",
+                "filename": "2022-12-19-17-41-09.jpeg",
+                "hour": 17,
+                "image_id": "25",
+                "isotime": "2022-12-19T17:41:09",
+                "minute": 41,
+                "month": 12,
+                "name": "2022-12-19-17-41-09",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9987298395910522,
+                    -0.021875296486544054,
+                    -0.03193199487130804,
+                    0.03225719481907671
+                ],
+                "second": 9,
+                "timestamp": 1671489669.0,
+                "translation": [
+                    0.31292,
+                    -2.597,
+                    -0.633618
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-41-08.jpeg",
+                "filename": "2022-12-19-17-41-08.jpeg",
+                "hour": 17,
+                "image_id": "24",
+                "isotime": "2022-12-19T17:41:08",
+                "minute": 41,
+                "month": 12,
+                "name": "2022-12-19-17-41-08",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9997056241394645,
+                    -0.015538694157898322,
+                    -0.0014498094549133817,
+                    0.01857719301551022
+                ],
+                "second": 8,
+                "timestamp": 1671489668.0,
+                "translation": [
+                    3.09549,
+                    -2.2745,
+                    -0.860853
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-41-07.jpeg",
+                "filename": "2022-12-19-17-41-07.jpeg",
+                "hour": 17,
+                "image_id": "23",
+                "isotime": "2022-12-19T17:41:07",
+                "minute": 41,
+                "month": 12,
+                "name": "2022-12-19-17-41-07",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9985938944736258,
+                    -0.04938199478155947,
+                    0.014936298421607196,
+                    0.012188498711980833
+                ],
+                "second": 7,
+                "timestamp": 1671489667.0,
+                "translation": [
+                    3.56289,
+                    1.62312,
+                    -0.274122
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-41-06.jpeg",
+                "filename": "2022-12-19-17-41-06.jpeg",
+                "hour": 17,
+                "image_id": "22",
+                "isotime": "2022-12-19T17:41:06",
+                "minute": 41,
+                "month": 12,
+                "name": "2022-12-19-17-41-06",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9974062382088946,
+                    -0.07186771716404892,
+                    0.0005062491209066465,
+                    0.003946000942416927
+                ],
+                "second": 6,
+                "timestamp": 1671489666.0,
+                "translation": [
+                    0.854495,
+                    3.48334,
+                    -0.543143
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-41-05.jpeg",
+                "filename": "2022-12-19-17-41-05.jpeg",
+                "hour": 17,
+                "image_id": "21",
+                "isotime": "2022-12-19T17:41:05",
+                "minute": 41,
+                "month": 12,
+                "name": "2022-12-19-17-41-05",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9976258100613108,
+                    -0.049849090509196115,
+                    -0.04735279098446837,
+                    0.003940109249839791
+                ],
+                "second": 5,
+                "timestamp": 1671489665.0,
+                "translation": [
+                    -2.71035,
+                    1.53813,
+                    -0.704614
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-41-04.jpeg",
+                "filename": "2022-12-19-17-41-04.jpeg",
+                "hour": 17,
+                "image_id": "20",
+                "isotime": "2022-12-19T17:41:04",
+                "minute": 41,
+                "month": 12,
+                "name": "2022-12-19-17-41-04",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9986865671205348,
+                    -0.03388358531320159,
+                    -0.035978884404996775,
+                    0.013511594143416124
+                ],
+                "second": 4,
+                "timestamp": 1671489664.0,
+                "translation": [
+                    -3.5215,
+                    -2.54766,
+                    -0.577631
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-41-03.jpeg",
+                "filename": "2022-12-19-17-41-03.jpeg",
+                "hour": 17,
+                "image_id": "19",
+                "isotime": "2022-12-19T17:41:03",
+                "minute": 41,
+                "month": 12,
+                "name": "2022-12-19-17-41-03",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9996947422051138,
+                    -0.01805269534468639,
+                    0.004375568871656285,
+                    0.016290395799136922
+                ],
+                "second": 3,
+                "timestamp": 1671489663.0,
+                "translation": [
+                    -0.880498,
+                    -3.73997,
+                    -0.794354
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-41-02.jpeg",
+                "filename": "2022-12-19-17-41-02.jpeg",
+                "hour": 17,
+                "image_id": "18",
+                "isotime": "2022-12-19T17:41:02",
+                "minute": 41,
+                "month": 12,
+                "name": "2022-12-19-17-41-02",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9998107794855606,
+                    -0.009926347810682714,
+                    0.016040496462169485,
+                    0.004751348952060658
+                ],
+                "second": 2,
+                "timestamp": 1671489662.0,
+                "translation": [
+                    0.162759,
+                    -3.64191,
+                    -0.941069
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-41-01.jpeg",
+                "filename": "2022-12-19-17-41-01.jpeg",
+                "hour": 17,
+                "image_id": "17",
+                "isotime": "2022-12-19T17:41:01",
+                "minute": 41,
+                "month": 12,
+                "name": "2022-12-19-17-41-01",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9996710872746987,
+                    -0.014990001308678289,
+                    -0.01281270111859255,
+                    -0.016396701431488015
+                ],
+                "second": 1,
+                "timestamp": 1671489661.0,
+                "translation": [
+                    -1.92688,
+                    -1.90935,
+                    -0.384123
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-41-00.jpeg",
+                "filename": "2022-12-19-17-41-00.jpeg",
+                "hour": 17,
+                "image_id": "16",
+                "isotime": "2022-12-19T17:41:00",
+                "minute": 41,
+                "month": 12,
+                "name": "2022-12-19-17-41-00",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9989805752641086,
+                    -0.039993582995955526,
+                    -0.02026659138326713,
+                    -0.005252507766794847
+                ],
+                "second": 0,
+                "timestamp": 1671489660.0,
+                "translation": [
+                    -2.94907,
+                    1.22412,
+                    0.479023
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-59.jpeg",
+                "filename": "2022-12-19-17-40-59.jpeg",
+                "hour": 17,
+                "image_id": "15",
+                "isotime": "2022-12-19T17:40:59",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-59",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9997982581302709,
+                    -0.014129503647988557,
+                    -0.014238003676001351,
+                    0.0010389502682386293
+                ],
+                "second": 59,
+                "timestamp": 1671489659.0,
+                "translation": [
+                    -3.22703,
+                    4.40473,
+                    0.50036
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-58.jpeg",
+                "filename": "2022-12-19-17-40-58.jpeg",
+                "hour": 17,
+                "image_id": "14",
+                "isotime": "2022-12-19T17:40:58",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-58",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9999999870777598,
+                    -7.561599902287189e-05,
+                    -0.00011322199853691811,
+                    8.54837988953578e-05
+                ],
+                "second": 58,
+                "timestamp": 1671489658.0,
+                "translation": [
+                    -1.38236,
+                    5.78207,
+                    0.387975
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-44.jpeg",
+                "filename": "2022-12-19-17-40-44.jpeg",
+                "hour": 17,
+                "image_id": "1",
+                "isotime": "2022-12-19T17:40:44",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-44",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9987472412817261,
+                    -0.0034813508410399597,
+                    0.04550251099269559,
+                    0.020526804958955307
+                ],
+                "second": 44,
+                "timestamp": 1671489644.0,
+                "translation": [
+                    4.69988,
+                    0.660176,
+                    -0.0915587
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-45.jpeg",
+                "filename": "2022-12-19-17-40-45.jpeg",
+                "hour": 17,
+                "image_id": "2",
+                "isotime": "2022-12-19T17:40:45",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-45",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9993651359286201,
+                    -0.00449842061185255,
+                    0.03157330429444207,
+                    0.015881302160094857
+                ],
+                "second": 45,
+                "timestamp": 1671489645.0,
+                "translation": [
+                    3.5955,
+                    0.612794,
+                    0.0773258
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-46.jpeg",
+                "filename": "2022-12-19-17-40-46.jpeg",
+                "hour": 17,
+                "image_id": "3",
+                "isotime": "2022-12-19T17:40:46",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-46",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9998370321448811,
+                    0.0006511990209361271,
+                    -0.00408175013122876,
+                    0.01757340056498695
+                ],
+                "second": 46,
+                "timestamp": 1671489646.0,
+                "translation": [
+                    1.18742,
+                    0.737217,
+                    0.318248
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-47.jpeg",
+                "filename": "2022-12-19-17-40-47.jpeg",
+                "hour": 17,
+                "image_id": "4",
+                "isotime": "2022-12-19T17:40:47",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-47",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9990490664931775,
+                    -0.0003670020244263586,
+                    -0.039757802646138936,
+                    0.017892601190868346
+                ],
+                "second": 47,
+                "timestamp": 1671489647.0,
+                "translation": [
+                    -2.7264,
+                    0.900897,
+                    0.232522
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-49.jpeg",
+                "filename": "2022-12-19-17-40-49.jpeg",
+                "hour": 17,
+                "image_id": "5",
+                "isotime": "2022-12-19T17:40:49",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-49",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9985132278541182,
+                    0.0074773517062822325,
+                    -0.05091471161840064,
+                    -0.017975404101868396
+                ],
+                "second": 49,
+                "timestamp": 1671489649.0,
+                "translation": [
+                    -5.72392,
+                    -2.3817,
+                    -0.360879
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-50.jpeg",
+                "filename": "2022-12-19-17-40-50.jpeg",
+                "hour": 17,
+                "image_id": "6",
+                "isotime": "2022-12-19T17:40:50",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-50",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9990937245490212,
+                    0.007270837995423859,
+                    -0.0402066889149821,
+                    -0.01192839671133101
+                ],
+                "second": 50,
+                "timestamp": 1671489650.0,
+                "translation": [
+                    -4.46879,
+                    -2.39256,
+                    -0.28217
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-51.jpeg",
+                "filename": "2022-12-19-17-40-51.jpeg",
+                "hour": 17,
+                "image_id": "7",
+                "isotime": "2022-12-19T17:40:51",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-51",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9995481068314519,
+                    0.008871680948203044,
+                    -0.028089203002167003,
+                    -0.005989330640138163
+                ],
+                "second": 51,
+                "timestamp": 1671489651.0,
+                "translation": [
+                    -3.44298,
+                    -2.31438,
+                    -0.167085
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-52.jpeg",
+                "filename": "2022-12-19-17-40-52.jpeg",
+                "hour": 17,
+                "image_id": "8",
+                "isotime": "2022-12-19T17:40:52",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-52",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9999490670279357,
+                    0.007611860510233285,
+                    -0.006611870443202601,
+                    0.0004539810304309613
+                ],
+                "second": 52,
+                "timestamp": 1671489652.0,
+                "translation": [
+                    -1.42115,
+                    -2.21557,
+                    -0.129788
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-53.jpeg",
+                "filename": "2022-12-19-17-40-53.jpeg",
+                "hour": 17,
+                "image_id": "9",
+                "isotime": "2022-12-19T17:40:53",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-53",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9999278169529165,
+                    0.0006836078748585392,
+                    0.0035710193462881365,
+                    0.011451697903648778
+                ],
+                "second": 53,
+                "timestamp": 1671489653.0,
+                "translation": [
+                    0.842202,
+                    -2.21488,
+                    0.0806929
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-54.jpeg",
+                "filename": "2022-12-19-17-40-54.jpeg",
+                "hour": 17,
+                "image_id": "10",
+                "isotime": "2022-12-19T17:40:54",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-54",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9997299645052231,
+                    -0.010772999617511497,
+                    -0.012756199547099244,
+                    0.016162299426167835
+                ],
+                "second": 54,
+                "timestamp": 1671489654.0,
+                "translation": [
+                    2.69954,
+                    -1.95062,
+                    0.456985
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-55.jpeg",
+                "filename": "2022-12-19-17-40-55.jpeg",
+                "hour": 17,
+                "image_id": "11",
+                "isotime": "2022-12-19T17:40:55",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-55",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9996959764530042,
+                    -0.016986699599892612,
+                    -0.003972789906424284,
+                    0.017424799589573537
+                ],
+                "second": 55,
+                "timestamp": 1671489655.0,
+                "translation": [
+                    3.87536,
+                    -0.559966,
+                    0.663767
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-56.jpeg",
+                "filename": "2022-12-19-17-40-56.jpeg",
+                "hour": 17,
+                "image_id": "12",
+                "isotime": "2022-12-19T17:40:56",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-56",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9997730188971161,
+                    -0.018763200354650875,
+                    -0.0004986080094243926,
+                    0.010079900190524288
+                ],
+                "second": 56,
+                "timestamp": 1671489656.0,
+                "translation": [
+                    3.03785,
+                    3.13826,
+                    0.165196
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            },
+            {
+                "cameraID": "1",
+                "day": 19,
+                "ext": ".jpeg",
+                "file_directory": "time-lapse",
+                "file_path": "time-lapse/2022-12-19-17-40-57.jpeg",
+                "filename": "2022-12-19-17-40-57.jpeg",
+                "hour": 17,
+                "image_id": "13",
+                "isotime": "2022-12-19T17:40:57",
+                "minute": 40,
+                "month": 12,
+                "name": "2022-12-19-17-40-57",
+                "py/object": "__main__.ImagePose",
+                "rotation": [
+                    0.9999451483156603,
+                    -0.009602371424260183,
+                    -0.0041116406098541435,
+                    0.000767616113855736
+                ],
+                "second": 57,
+                "timestamp": 1671489657.0,
+                "translation": [
+                    1.3099,
+                    5.63032,
+                    -0.030908
+                ],
+                "viewID": "time-lapse",
+                "weekday": 0,
+                "year": 2022
+            }
+        ]
+    }
+}
