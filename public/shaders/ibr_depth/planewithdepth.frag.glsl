@@ -2,9 +2,17 @@ precision highp float;
 precision highp int;
 
 varying vec2 vUv;
+varying vec4 vPosition;
 
 uniform sampler2D inputMap;
+uniform sampler2D paintMap;
 uniform bool isOccupancy;
+uniform float depth;
+
+uniform mat4 captureCameraProjMat;
+varying mat4 mModel;
+varying float visibility;
+varying vec2 texCoords;
 
 // vec2 orientedDeviceTexCoords(vec2 texCoords, int orientation){
 //     switch(orientation) {
@@ -45,15 +53,31 @@ uniform bool isOccupancy;
 //     }
 // }
 
+
 void main() {
+    if (visibility > 0.0) {
+        gl_FragColor = vec4(0.0);
+        return;
+    }
     if (isOccupancy) {
         gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+        return;
     } else {
-        gl_FragColor = texture(inputMap, vUv);
+        float painted = texture(paintMap, texCoords).x;
+        if (painted > 0.5) {
+            vec4 worldCoordinates = inverse(viewMatrix) * vec4(vPosition.xyz / vPosition.z * (-depth), 1.0);
+            vec4 capturedCoord = captureCameraProjMat * inverse(mModel) * worldCoordinates;
+            vec2 rpcoords = capturedCoord.xy/capturedCoord.w;
+            rpcoords = (rpcoords+vec2(1.0,1.0))*0.5;
+            gl_FragColor = texture(inputMap, rpcoords);
+            gl_FragColor = gl_FragColor * 0.8 + vec4(1.0, 0.0, 0.0, 1.0) * 0.2;
+        } else {
+            gl_FragColor = texture(inputMap, vUv);
+        }
     }
-    
 
-    // gl_FragColor = vec4(vec3(depth), 1.0);
+
+        // gl_FragColor = vec4(vec3(depth), 1.0);
     // return;
     // vec3 N = normalize( cross( dFdx( mPosition.xyz ), dFdy( mPosition.xyz ) ) );
     // vec3 viewDir = vec3(0, 0, -1);

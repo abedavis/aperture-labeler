@@ -63,16 +63,18 @@ export class PaintInteractionMode extends ASceneInteractionMode{
         if(!event.ndcCursor){
             return;
         }
-        this.ibr.updateRaycaster(event.ndcCursor, this.threeJSCamera);
-        this.ibr.signalEvent("paintBrushMoved");
+        const uv = event.ndcCursor.plus(new Vec2(1.0, 1.0)).times(0.5);
+        this.ibr.updateDepthMap(uv);
     }
 
     onDragMove(event: AInteractionEvent, interaction: ADragInteraction): void {
         if(!event.ndcCursor){
             return;
         }
-        this.ibr.updateRaycaster(event.ndcCursor, this.threeJSCamera);
-        this.ibr.signalEvent("paintBrushMoved");
+        // this.ibr.updateRaycaster(event.ndcCursor, this.threeJSCamera);
+        // this.ibr.signalEvent("paintBrushMoved");
+        const uv = event.ndcCursor.plus(new Vec2(1.0, 1.0)).times(0.5);
+        this.ibr.updateDepthMap(uv);
     }
 
     onWheelMove(event: AInteractionEvent, interaction: AWheelInteraction) {

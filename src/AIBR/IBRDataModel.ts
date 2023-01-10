@@ -799,16 +799,17 @@ export class IBRDataModel extends ANodeModel3D {
         this.material.setDepthMap(this.paintedDepthMap);
     }
 
-    updateDepthMap(uv: THREE.Vector2) {
+    updateDepthMap(uv: Vec2) {
         const {width, height} = this.paintedDepthMap;
         const x = uv.x * width;
         const y = uv.y * height;
-        const depthData = new Color(this.focusDistance, 1.0, 1.0, 0);
+        //const depthData = new Color(this.focusDistance, 1.0, 1.0, 0);
+        const depthData = new Color(1.0, 0.0, 0.0, 0.0);
         for (let i=-this.brushRadius; i < this.brushRadius+1; i++) {
             for (let j=-this.brushRadius; j < this.brushRadius+1; j++) {
                 this.paintedDepthMap.setPixelNN(
-                    x + i,
-                    y + j,
+                    Math.min(Math.max(0, x + i), width-1),
+                    Math.min(Math.max(0, y + j), height-1),
                     depthData
                 );
             }

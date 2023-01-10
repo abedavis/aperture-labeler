@@ -95,12 +95,12 @@ export class IBRSceneView extends ANodeView{
             "IBR Scene View showFocusSphere"
         );
 
-        this.subscribe(
-            model.addEventListener("paintBrushMoved", () => {
-                self.paint();
-            }),
-            "Paint on texture"
-        )
+        // this.subscribe(
+        //     model.addEventListener("paintBrushMoved", () => {
+        //         self.paint();
+        //     }),
+        //     "Paint on texture"
+        // )
     }
 
     updateFocalPlane() {
@@ -147,11 +147,11 @@ export class IBRSceneView extends ANodeView{
         console.warn("Update not implemented")
     }
 
-    paint() {
-        const intersect = this.model.raycaster.intersectObject(this.focalPlane.threejs)[0];
-        if (!intersect) return;
-        this.model.updateDepthMap(intersect.uv!);
-    }
+    // paint() {
+    //     const intersect = this.model.raycaster.intersectObject(this.focalPlane.threejs)[0];
+    //     if (!intersect) return;
+    //     this.model.updateDepthMap(intersect.uv!);
+    // }
 
 
 }

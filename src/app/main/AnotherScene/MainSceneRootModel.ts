@@ -68,9 +68,10 @@ export class MainSceneRootModel extends ASceneModel implements ASceneModelWithIB
 
 
         this.depthGrids = []
-        this.ibrData.capturedImages.forEach(async (capture: IBRCapturedImage) => {
+        this.ibrData.capturedImages.slice(0, 5).forEach(async (capture: IBRCapturedImage) => {
             const depthGrid = await DepthGridModel.Create(capture);
             depthGrid.visible = false;
+            depthGrid.material.setTexture("paint", this.ibr.paintedDepthMap);
             this.addChild(depthGrid);
             this.depthGrids.push(depthGrid);
         })
@@ -87,6 +88,9 @@ export class MainSceneRootModel extends ASceneModel implements ASceneModelWithIB
         for(let c of this.getDescendantList()){
             c.timeUpdate(t);
         }
+        this.depthGrids.forEach((grid: DepthGridModel) => {
+            grid.material.setUniform("depth", this.ibr.focusDistance);
+        })
     }
 
     getCoordinatesForCursorEvent(event: AInteractionEvent){
