@@ -1,7 +1,6 @@
 import { text } from "d3";
 import { ANodeModel3D, ASerializable, ATexture, NodeTransform3D } from "src/anigraph";
 import { ADataTextureFloat1D, ADataTextureFloat4D } from "src/anigraph/rendering/image";
-import { Texture } from "three";
 import { IBRCapturedImage } from "../IBRCapturedImage";
 import { DepthGridShaderModel } from "../shadermodels/DepthGridShaderModel";
 import { TIFFLoader } from "./TIFFLoader";

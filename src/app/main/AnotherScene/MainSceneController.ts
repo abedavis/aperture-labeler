@@ -58,6 +58,7 @@ export class MainSceneController extends ASceneController implements ASceneContr
     }
 
     onAnimationFrameCallback(context:AGLContext) {
+        context.renderer.autoClear = true;
         const time = this.time;
         this.model.timeUpdate(time);
         this.interactionMode.timeUpdate(time)
@@ -66,25 +67,61 @@ export class MainSceneController extends ASceneController implements ASceneContr
         context.renderer.clear();
         context.renderer.render(this.view.threejs, this._threeCamera);
 
-        this.setRenderTarget(this.accRenderTarget);
-        this.fullScreenQuad.setMaterial(this.accMaterial);
+        this.setRenderTarget(this.lastTextureRenderTarget);
         context.renderer.clear();
+
+        this.setRenderTarget(this.nextRenderTarget);
+        context.renderer.clear();
+        this.fullScreenQuad.setMaterial(this.accMaterial);
+        this.accMaterial.setUniform("init", true)
+        this.accMaterial.setTexture("acc", this.lastTextureRenderTarget.targetTexture);
         context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
 
+        this.usingTarget1 = !this.usingTarget1;
+
+        this.setRenderTarget(this.nextRenderTarget);
+        context.renderer.clear();
+        this.fullScreenQuad.setMaterial(this.accMaterial);
+        this.accMaterial.setUniform("init", false)
+        this.accMaterial.setTexture("acc", this.lastTextureRenderTarget.targetTexture);
+        context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
+
+        // this.usingTarget1 = !this.usingTarget1;
+
+        // this.setRenderTarget(this.nextRenderTarget);
+        // context.renderer.clear();
+        // this.fullScreenQuad.setMaterial(this.accMaterial);
+        // this.accMaterial.setUniform("init", false);
+        // this.accMaterial.setTexture("acc", this.lastTextureRenderTarget.targetTexture);
+        // context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
+        
+        // context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
+        // // context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
 
         this.setRenderTarget();
         this.fullScreenQuad.setMaterial(this.displayMaterial);
+        this.displayMaterial.setTexture('input', this.lastTextureRenderTarget.targetTexture);
         context.renderer.clear();
         context.renderer.render(this.fullScreenScene.threejs, this.fullScreenCamera._threejs);
     }
 
     depthGridRenderTarget!: ARenderTarget;
-    accRenderTarget!: ARenderTarget;
+    accRenderTarget1!: ARenderTarget;
+    accRenderTarget2!: ARenderTarget;
     fullScreenQuad!: AGraphicElement;
     fullScreenScene!: ASceneElement;
     fullScreenCamera!: PostProcessingCamera;
     accMaterial!: AShaderMaterial;
     displayMaterial!: AShaderMaterial;
+
+    usingTarget1: boolean = true;
+
+    get lastTextureRenderTarget():ARenderTarget{
+        return (this.usingTarget1) ? this.accRenderTarget1 : this.accRenderTarget2;
+    };
+    get nextRenderTarget():ARenderTarget{
+        return (this.usingTarget1) ? this.accRenderTarget2 : this.accRenderTarget1;
+    };
 
     async initPostProcessingEffects(){
         function newRenderTarget(){
@@ -94,12 +131,13 @@ export class MainSceneController extends ASceneController implements ASceneContr
             return rt;
         }
         this.depthGridRenderTarget = newRenderTarget();
-        this.accRenderTarget = newRenderTarget();
+        this.accRenderTarget1 = newRenderTarget();
+        this.accRenderTarget2 = newRenderTarget();
 
         const accShaderModel = await AShaderModel.CreateModel("acctexture");
         this.accMaterial = accShaderModel.CreateMaterial();
         this.accMaterial.setTexture('input', this.depthGridRenderTarget.targetTexture);
-        this.accMaterial.setBlendingMode(THREE.AdditiveBlending);
+        this.accMaterial.setTexture('acc', this.lastTextureRenderTarget.targetTexture);
         this.accMaterial.threejs.transparent = true;
         this.accMaterial.threejs.blending=THREE.CustomBlending;
         this.accMaterial.threejs.blendEquation=THREE.AddEquation;
@@ -111,8 +149,9 @@ export class MainSceneController extends ASceneController implements ASceneContr
 
         const displayShaderModel = await AShaderModel.CreateModel("displaytexture");
         this.displayMaterial = displayShaderModel.CreateMaterial();
-        this.displayMaterial.setTexture('input', this.accRenderTarget.targetTexture);
-        this.displayMaterial.setTexture('input2', this.depthGridRenderTarget.targetTexture);
+        this.displayMaterial.threejs.side = THREE.FrontSide;
+        this.displayMaterial.setTexture('input', this.lastTextureRenderTarget.targetTexture);
+        // this.displayMaterial.setTexture('input2', this.depthGridRenderTarget.targetTexture);
 
         this.fullScreenQuad = AGraphicElement.CreateSimpleQuad(this.displayMaterial);
         this.fullScreenQuad.setTransform(Mat4.Scale3D(V3(2.0,2.0,1.0)));
